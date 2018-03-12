@@ -1,6 +1,5 @@
 const assert = require('assert');
 
-
 describe('Protocol V2 Test Vectors', () => {
 
   const _V2 = require('../lib/protocol/V2');
