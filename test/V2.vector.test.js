@@ -8,7 +8,7 @@ describe('Protocol V2 Test Vectors', () => {
   describe('#2E - authenticated encryption', () => {
 
     // NOTE: Throughout these tests we use the undocumented __encrypt API, allowing us to
-    //       provide custom nonce parameters, needed for aligning with known test vectors. \
+    //       provide custom nonce parameters, needed for aligning with known test vectors.
 
     let symmetricKey, nullKey, fullKey, nonce;
 
