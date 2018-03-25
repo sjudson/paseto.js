@@ -1,20 +1,20 @@
 const assert = require('assert');
 const sodium = require('libsodium-wrappers');
 
-describe('Protocol V2', () => {
+describe('Protocol V1', () => {
 
-  const _V2 = require('../lib/protocol/V2');
-  const V2  = new _V2();
+  const _V1 = require('../lib/protocol/V1');
+  const V1  = new _V1();
 
   describe('authenticated encryption', () => {
 
     let key, message, footer;;
 
     before(() => {
-      const SymmetricKeyV2 = require('../lib/key/symmetric').V2;
+      const SymmetricKeyV1 = require('../lib/key/symmetric').V1;
 
       const rkey = Buffer.from(sodium.randombytes_buf(32));
-      key = new SymmetricKeyV2(rkey);
+      key = new SymmetricKeyV1(rkey);
 
       footer = 'footer';
     });
@@ -27,13 +27,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully - callback api', (done) => {
 
-        V2.encrypt(message, key, '', (err, token) => {
+        V1.encrypt(message, key, '', (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(typeof token, 'string');
-          assert.equal(token.substring(0, 9), 'v2.local.');
+          assert.equal(token.substring(0, 9), 'v1.local.');
 
-          V2.decrypt(token, key, '', (err, data) => {
+          V1.decrypt(token, key, '', (err, data) => {
             if (err) { return done(err); }
 
             assert.equal(typeof data, 'string');
@@ -46,13 +46,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully - promise api', (done) => {
 
-        V2.encrypt(message, key, '')
+        V1.encrypt(message, key, '')
           .then((token) => {
 
             assert.equal(typeof token, 'string');
-            assert.equal(token.substring(0, 9), 'v2.local.');
+            assert.equal(token.substring(0, 9), 'v1.local.');
 
-            return V2.decrypt(token, key, '');
+            return V1.decrypt(token, key, '');
           })
           .then((data) => {
 
@@ -68,13 +68,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully with footer - callback api', (done) => {
 
-        V2.encrypt(message, key, footer, (err, token) => {
+        V1.encrypt(message, key, footer, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(typeof token, 'string');
-          assert.equal(token.substring(0, 9), 'v2.local.');
+          assert.equal(token.substring(0, 9), 'v1.local.');
 
-          V2.decrypt(token, key, footer, (err, data) => {
+          V1.decrypt(token, key, footer, (err, data) => {
             if (err) { return done(err); }
 
             assert.equal(typeof data, 'string');
@@ -87,13 +87,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully with footer - promise api', (done) => {
 
-        V2.encrypt(message, key, footer)
+        V1.encrypt(message, key, footer)
           .then((token) => {
 
             assert.equal(typeof token, 'string');
-            assert.equal(token.substring(0, 9), 'v2.local.');
+            assert.equal(token.substring(0, 9), 'v1.local.');
 
-            return V2.decrypt(token, key, footer);
+            return V1.decrypt(token, key, footer);
           })
           .then((data) => {
 
@@ -117,13 +117,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully - callback api', (done) => {
 
-        V2.encrypt(message, key, '', (err, token) => {
+        V1.encrypt(message, key, '', (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(typeof token, 'string');
-          assert.equal(token.substring(0, 9), 'v2.local.');
+          assert.equal(token.substring(0, 9), 'v1.local.');
 
-          V2.decrypt(token, key, '', (err, data) => {
+          V1.decrypt(token, key, '', (err, data) => {
             if (err) { return done(err); }
 
             assert.equal(typeof data, 'string');
@@ -136,13 +136,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully - promise api', (done) => {
 
-        V2.encrypt(message, key, '')
+        V1.encrypt(message, key, '')
           .then((token) => {
 
             assert.equal(typeof token, 'string');
-            assert.equal(token.substring(0, 9), 'v2.local.');
+            assert.equal(token.substring(0, 9), 'v1.local.');
 
-            return V2.decrypt(token, key, '');
+            return V1.decrypt(token, key, '');
           })
           .then((data) => {
 
@@ -158,13 +158,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully with footer - callback api', (done) => {
 
-        V2.encrypt(message, key, footer, (err, token) => {
+        V1.encrypt(message, key, footer, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(typeof token, 'string');
-          assert.equal(token.substring(0, 9), 'v2.local.');
+          assert.equal(token.substring(0, 9), 'v1.local.');
 
-          V2.decrypt(token, key, footer, (err, data) => {
+          V1.decrypt(token, key, footer, (err, data) => {
             if (err) { return done(err); }
 
             assert.equal(typeof data, 'string');
@@ -177,13 +177,13 @@ describe('Protocol V2', () => {
 
       it('should encrypt and decrypt successfully with footer - promise api', (done) => {
 
-        V2.encrypt(message, key, footer)
+        V1.encrypt(message, key, footer)
           .then((token) => {
 
             assert.equal(typeof token, 'string');
-            assert.equal(token.substring(0, 9), 'v2.local.');
+            assert.equal(token.substring(0, 9), 'v1.local.');
 
-            return V2.decrypt(token, key, footer);
+            return V1.decrypt(token, key, footer);
           })
           .then((data) => {
 
@@ -202,12 +202,12 @@ describe('Protocol V2', () => {
 
       const InvalidVersionError = require('../lib/error/InvalidVersionError');
 
-      const _V1 = require('../lib/protocol/V1');
-      const V1  = new _V1();
+      const _V2 = require('../lib/protocol/V2');
+      const V2  = new _V2();
 
       it('should error on encryption with an invalid key version - callback api', (done) => {
 
-        V1.encrypt('test', key, '', function(err, token) {
+        V2.encrypt('test', key, '', function(err, token) {
           assert.ok(err);
           assert.ok(!token);
 
@@ -220,7 +220,7 @@ describe('Protocol V2', () => {
 
       it('should error on encryption with an invalid key version - promise api', (done) => {
 
-        V1.encrypt('test', key, '')
+        V2.encrypt('test', key, '')
           .then((token) => {
             assert.ok(false); // fail if we go through here
           })
@@ -236,11 +236,11 @@ describe('Protocol V2', () => {
 
       it('should error on decryption with an invalid key version - callback api', (done) => {
 
-        V2.encrypt('test', key, '', function(err, token) {
+        V1.encrypt('test', key, '', function(err, token) {
           if (err) { return done(err); }
           assert.ok(token);
 
-          V1.decrypt(token, key, '', function(err, token) {
+          V2.decrypt(token, key, '', function(err, token) {
             assert.ok(err);
             assert.ok(!token);
 
@@ -254,12 +254,12 @@ describe('Protocol V2', () => {
 
       it('should error on decryption with an invalid key version - promise api', (done) => {
 
-        V2.encrypt('test', key, '')
+        V1.encrypt('test', key, '')
           .then((token) => {
             assert.ok(token);
 
             // nest so that we catch the right error
-            return V1.decrypt(token, key, '')
+            return V2.decrypt(token, key, '')
               .then((token) => {
                 assert.ok(false); // fail if we go through here
               })
