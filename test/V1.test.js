@@ -8,12 +8,14 @@ describe('Protocol V1', () => {
 
   describe('keygen', () => {
 
-    const symmetric = _V1.generateSymmetricKey();
+    it('should generate a symmetric key', (done) => {
+      const symmetric = _V1.generateSymmetricKey();
 
-    assert.ok(symmetric instanceof require('../lib/key/symmetric'));
+      assert.ok(symmetric instanceof require('../lib/key/symmetric'));
+      assert.equal(V1.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
 
-    assert.equal(V1.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
-
+      done();
+    });
   });
 
   describe('authenticated encryption', () => {
