@@ -2,7 +2,7 @@ const assert = require('assert');
 
 describe('Protocol V2 Test Vectors', () => {
 
-  const _V2 = require('../lib/protocol/V2');
+  const _V2 = require('../lib/paseto').protocol.v2;
   const V2  = new _V2();
 
   describe('#2E - authenticated encryption', () => {

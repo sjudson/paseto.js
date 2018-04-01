@@ -3,8 +3,18 @@ const sodium = require('libsodium-wrappers');
 
 describe('Protocol V2', () => {
 
-  const _V2 = require('../lib/protocol/V2');
+  const _V2 = require('../lib/paseto').protocol.v2;
   const V2  = new _V2();
+
+  describe('keygen', () => {
+
+    const symmetric = _V2.generateSymmetricKey();
+
+    assert.ok(symmetric instanceof require('../lib/key/symmetric'));
+
+    assert.equal(V2.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
+
+  });
 
   describe('authenticated encryption', () => {
 
