@@ -17,6 +17,15 @@ describe('Protocol V2', () => {
 
       done();
     });
+
+    it('should generate an asymmetric secret key', (done) => {
+      const asymmetric = V2.generateAsymmetricSecretKey();
+
+      assert.ok(asymmetric instanceof Paseto.AsymmetricSecretKey);
+      assert.equal(64, Buffer.byteLength(asymmetric.raw()));
+
+      done();
+    });
   });
 
   describe('authenticated encryption', () => {
@@ -289,5 +298,281 @@ describe('Protocol V2', () => {
           });
       });
     });
+  });
+
+  describe('signing', () => {
+
+    let sk, pk, message, footer;
+
+    before(() => {
+      const AsymmetricSecretKeyV2 = Paseto.AsymmetricSecretKey.V2;
+      const AsymmetricPublicKeyV2 = Paseto.AsymmetricPublicKey.V2;
+
+      const keypair = sodium.crypto_sign_keypair();
+
+      sk = new AsymmetricSecretKeyV2(keypair.privateKey);
+      pk = new AsymmetricPublicKeyV2(keypair.publicKey);
+
+      footer = 'footer';
+    });
+
+    describe('text', () => {
+
+      before(() => {
+        message = 'test';
+      });
+
+      it('should sign and verify successfully - callback api', (done) => {
+
+        V2.sign(message, sk, '', (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v2.public.');
+
+          V2.verify(token, pk, '', (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully - promise api', (done) => {
+
+        V2.sign(message, sk, '')
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v2.public.');
+
+            return V2.verify(token, pk, '');
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+
+      it('should sign and verify successfully with footer - callback api', (done) => {
+
+        V2.sign(message, sk, footer, (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v2.public.');
+
+          V2.verify(token, pk, footer, (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully with footer - promise api', (done) => {
+
+        V2.sign(message, sk, footer)
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v2.public.');
+
+            return V2.verify(token, pk, footer);
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+    });
+
+    describe('json (stringified)', () => {
+
+      before(() => {
+        const year = new Date().getUTCFullYear() + 1;
+        message = JSON.stringify({ data: 'this is a signed message', expires: year + '-01-01T00:00:00+00:00' });
+      });
+
+      it('should sign and verify successfully - callback api', (done) => {
+
+        V2.sign(message, sk, '', (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v2.public.');
+
+          V2.verify(token, pk, '', (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully - promise api', (done) => {
+
+        V2.sign(message, sk, '')
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v2.public.');
+
+            return V2.verify(token, pk, '');
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+
+      it('should sign and verify successfully with footer - callback api', (done) => {
+
+        V2.sign(message, sk, footer, (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v2.public.');
+
+          V2.verify(token, pk, footer, (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully with footer - promise api', (done) => {
+
+        V2.sign(message, sk, footer)
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v2.public.');
+
+            return V2.verify(token, pk, footer);
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+    });
+    /*
+    describe('errors', () => {
+
+      const InvalidVersionError = require('../lib/error/InvalidVersionError');
+
+      const V1 = new Paseto.V1();
+
+      it('should error on signing with an invalid key version - callback api', (done) => {
+
+        V1.sign('test', sk, '', function(err, token) {
+          assert.ok(err);
+          assert.ok(!token);
+
+          assert.ok(err instanceof InvalidVersionError);
+          assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+          done();
+        });
+      });
+
+      it('should error on signing with an invalid key version - promise api', (done) => {
+
+        V1.sign('test', sk, '')
+          .then((token) => {
+            assert.ok(false); // fail if we go through here
+          })
+          .catch((err) => {
+            assert.ok(err);
+
+            assert.ok(err instanceof InvalidVersionError);
+            assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+            done();
+          });
+      });
+
+      it('should error on verifying with an invalid key version - callback api', (done) => {
+
+        V2.sign('test', sk, '', function(err, token) {
+          if (err) { return done(err); }
+          assert.ok(token);
+
+          V1.verify(token, pk, '', function(err, token) {
+            assert.ok(err);
+            assert.ok(!token);
+
+            assert.ok(err instanceof InvalidVersionError);
+            assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+            done();
+          });
+        });
+      });
+
+      it('should error on verifing with an invalid key version - promise api', (done) => {
+
+        V2.sign('test', sk, '')
+          .then((token) => {
+            assert.ok(token);
+
+            // nest so that we catch the right error
+            return V1.verify(token, pk, '')
+              .then((token) => {
+                assert.ok(false); // fail if we go through here
+              })
+              .catch((err) => {
+                assert.ok(err);
+
+                assert.ok(err instanceof InvalidVersionError);
+                assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+                done();
+              });
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+    });
+    */
   });
 });
