@@ -21,7 +21,7 @@ describe('Protocol V1', () => {
 
   describe('authenticated encryption', () => {
 
-    let key, message, footer;;
+    let key, message, footer;
 
     before(() => {
       const SymmetricKeyV1 = Paseto.SymmetricKey.V1;
