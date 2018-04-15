@@ -1,17 +1,18 @@
 const assert = require('assert');
 const sodium = require('libsodium-wrappers');
 
+const Paseto = require('../lib/paseto');
+
 describe('Protocol V2', () => {
 
-  const _V2 = require('../lib/paseto').protocol.v2;
-  const V2  = new _V2();
+  const V2 = new Paseto.V2();
 
   describe('keygen', () => {
 
     it('should generate a symmetric key', (done) => {
-      const symmetric = _V2.generateSymmetricKey();
+      const symmetric = V2.generateSymmetricKey();
 
-      assert.ok(symmetric instanceof require('../lib/key/symmetric'));
+      assert.ok(symmetric instanceof Paseto.SymmetricKey);
       assert.equal(V2.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
 
       done();
@@ -20,10 +21,10 @@ describe('Protocol V2', () => {
 
   describe('authenticated encryption', () => {
 
-    let key, message, footer;;
+    let key, message, footer;
 
     before(() => {
-      const SymmetricKeyV2 = require('../lib/key/symmetric').V2;
+      const SymmetricKeyV2 = Paseto.SymmetricKey.V2;
 
       const rkey = Buffer.from(sodium.randombytes_buf(32));
       key = new SymmetricKeyV2(rkey);
@@ -214,8 +215,7 @@ describe('Protocol V2', () => {
 
       const InvalidVersionError = require('../lib/error/InvalidVersionError');
 
-      const _V1 = require('../lib/protocol/V1');
-      const V1  = new _V1();
+      const V1 = new Paseto.V1();
 
       it('should error on encryption with an invalid key version - callback api', (done) => {
 

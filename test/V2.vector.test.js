@@ -1,9 +1,10 @@
 const assert = require('assert');
 
+const Paseto = require('../lib/paseto');
+
 describe('Protocol V2 Test Vectors', () => {
 
-  const _V2 = require('../lib/paseto').protocol.v2;
-  const V2  = new _V2();
+  const V2  = new Paseto.V2();
 
   describe('#2E - authenticated encryption', () => {
 
@@ -13,7 +14,7 @@ describe('Protocol V2 Test Vectors', () => {
     let symmetricKey, nullKey, fullKey, nonce;
 
     before(() => {
-      const SymmetricKeyV2 = require('../lib/key/symmetric').V2;
+      const SymmetricKeyV2 = Paseto.SymmetricKey.V2;
 
       const skey   = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
       symmetricKey = new SymmetricKeyV2(skey);
