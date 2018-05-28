@@ -17,7 +17,7 @@ describe('extcrypto', () => {
 
     it('should generate a pem encoded key asynchronously', (done) => {
       extcrypto.keygen((err, sk) => {
-        assert.ok(!err);
+        if (err) { return done(err); }
 
         assert.ok(typeof sk === 'string');
         assert.equal('-----BEGIN RSA PRIVATE KEY-----', sk.slice(0, 31));
@@ -78,7 +78,7 @@ DVcX9MmiYMvNo0DgKxt3Ku8PenXw9LaLAgMBAAE=
 
     it('should extract a public key from secret key asynchronously', (done) => {
       extcrypto.extract(expected.sk, (err, pk) => {
-        assert.ok(!err);
+        if (err) { return done(err); }
 
         assert.ok(typeof pk === 'string');
         assert.equal(expected.pk, pk);
