@@ -4,7 +4,231 @@ const Paseto = require('../lib/paseto');
 
 describe('Protocol V2 Test Vectors', () => {
 
-  const V2  = new Paseto.V2();
+  const V2 = new Paseto.V2();
+
+  describe('V2 Official Test Vectors', () => {
+
+    // NOTE: Throughout these tests we use the undocumented __encrypt API, allowing us to
+    //       provide custom nonce parameters, needed for aligning with known test vectors.
+
+    let symmetricKey, nonce1, nonce2, secretKey, publicKey;
+
+    before(() => {
+      const SymmetricKeyV2 = Paseto.SymmetricKey.V2;
+
+      const skey   = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
+      symmetricKey = new SymmetricKeyV2(skey);
+
+      nonce1 = Buffer.alloc(24).fill(0);;
+      nonce2 = Buffer.from('45742c976d684ff84ebdc0de59809a97cda2f64c84fda19b', 'hex');
+
+      const AsymmetricSecretKeyV2 = Paseto.AsymmetricSecretKey.V2;
+      const AsymmetricPublicKeyV2 = Paseto.AsymmetricPublicKey.V2;
+
+      const sekey = Buffer.from('b4cbfb43df4ce210727d953e4a713307fa19bb7d9f85041438d9e11b942a37741eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
+      const pukey = Buffer.from('1eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
+      secretKey = new AsymmetricSecretKeyV2(sekey);
+      publicKey = new AsymmetricPublicKeyV2(pukey);
+    });
+
+    it('Test Vector 2-E-1 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce1, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.local.97TTOvgwIxNGvV80XKiGZg_kD3tsXM_-qB4dZGHOeN1cTkgQ4PnW8888l802W8d9AvEGnoNBY3BnqHORy8a5cC8aKpbA0En8XELw2yDk2f1sVODyfnDbi6rEGMY3pSfCbLWMM2oHJxvlEl2XbQ');
+
+        done();
+      });
+    });
+
+    it('Test Vector 2-E-1 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce1)
+        .then((token) => {
+          assert.equal(token, 'v2.local.97TTOvgwIxNGvV80XKiGZg_kD3tsXM_-qB4dZGHOeN1cTkgQ4PnW8888l802W8d9AvEGnoNBY3BnqHORy8a5cC8aKpbA0En8XELw2yDk2f1sVODyfnDbi6rEGMY3pSfCbLWMM2oHJxvlEl2XbQ');
+          done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-E-2 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce1, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.local.CH50H-HM5tzdK4kOmQ8KbIvrzJfjYUGuu5Vy9ARSFHy9owVDMYg3-8rwtJZQjN9ABHb2njzFkvpr5cOYuRyt7CRXnHt42L5yZ7siD-4l-FoNsC7J2OlvLlIwlG06mzQVunrFNb7Z3_CHM0PK5w');
+
+        done();
+      });
+    });
+
+    it('Test Vector 2-E-2 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce1)
+        .then((token) => {
+          assert.equal(token, 'v2.local.CH50H-HM5tzdK4kOmQ8KbIvrzJfjYUGuu5Vy9ARSFHy9owVDMYg3-8rwtJZQjN9ABHb2njzFkvpr5cOYuRyt7CRXnHt42L5yZ7siD-4l-FoNsC7J2OlvLlIwlG06mzQVunrFNb7Z3_CHM0PK5w');
+          done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-E-3 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce2, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-O5xRBN076fSDPo5xUCPpBA');
+
+        done();
+      });
+    });
+
+    it('Test Vector 2-E-3 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce2)
+        .then((token) => {
+          assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-O5xRBN076fSDPo5xUCPpBA');
+          done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-E-4 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce2, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DPbIxtjGvNRAwsLK7LcV8oQ');
+
+        done();
+      });
+    });
+
+    it('Test Vector 2-E-4 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.__encrypt(message, symmetricKey, '', nonce2)
+        .then((token) => {
+          assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DPbIxtjGvNRAwsLK7LcV8oQ');
+          done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-E-5 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+      const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+      V2.__encrypt(message, symmetricKey, footer, nonce2, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-zSLIrxZqOLwcFLYbVK1SrQ.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+
+        done();
+      });
+    });
+
+    it('Test Vector 2-E-5 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+      const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+      V2.__encrypt(message, symmetricKey, footer, nonce2)
+        .then((token) => {
+          assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-zSLIrxZqOLwcFLYbVK1SrQ.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+          done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-E-6 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+      const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+      V2.__encrypt(message, symmetricKey, footer, nonce2, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DnMXKdHn_Smp6L_NfaEnZ-A.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+
+        done();
+      });
+    });
+
+    it('Test Vector 2-E-6 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+      const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+      V2.__encrypt(message, symmetricKey, footer, nonce2)
+        .then((token) => {
+          assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DnMXKdHn_Smp6L_NfaEnZ-A.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+          done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-S-1 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.sign(message, secretKey, '', (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9HQr8URrGntTu7Dz9J2IF23d1M7-9lH9xiqdGyJNvzp4angPW5Esc7C5huy_M8I8_DjJK2ZXC2SUYuOFM-Q_5Cw');
+
+        return done();
+      });
+    });
+
+    it('Test Vector 2-S-1 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+      V2.sign(message, secretKey, '')
+        .then((token) => {
+          assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9HQr8URrGntTu7Dz9J2IF23d1M7-9lH9xiqdGyJNvzp4angPW5Esc7C5huy_M8I8_DjJK2ZXC2SUYuOFM-Q_5Cw');
+          return done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+
+    it('Test Vector 2-S-2 - callback api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+      const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+      V2.sign(message, secretKey, footer, (err, token) => {
+        if (err) { return done(err); }
+        assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9flsZsx_gYCR0N_Ec2QxJFFpvQAs7h9HtKwbVK2n1MJ3Rz-hwe8KUqjnd8FAnIJZ601tp7lGkguU63oGbomhoBw.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+
+        return done();
+      });
+    });
+
+    it('Test Vector 2-S-2 - promise api', (done) => {
+      const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+      const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+      V2.sign(message, secretKey, footer)
+        .then((token) => {
+          assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9flsZsx_gYCR0N_Ec2QxJFFpvQAs7h9HtKwbVK2n1MJ3Rz-hwe8KUqjnd8FAnIJZ601tp7lGkguU63oGbomhoBw.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+          return done();
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    });
+  });
 
   describe('#2E - authenticated encryption', () => {
 

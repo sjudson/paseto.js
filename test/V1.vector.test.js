@@ -47,7 +47,7 @@ owIDAQAB
       });
     });
 
-    it('Test Vector 1.1 - promise api', (done) => {
+    it('Test Vector 1-E-1 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce1)
@@ -60,7 +60,7 @@ owIDAQAB
         });
     });
 
-    it('Test Vector 1.2 - callback api', (done) => {
+    it('Test Vector 1-E-2 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce1, (err, token) => {
@@ -71,7 +71,7 @@ owIDAQAB
       });
     });
 
-    it('Test Vector 1.2 - promise api', (done) => {
+    it('Test Vector 1-E-2 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce1)
@@ -84,7 +84,7 @@ owIDAQAB
         });
     });
 
-    it('Test Vector 1.3 - callback api', (done) => {
+    it('Test Vector 1-E-3 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce2, (err, token) => {
@@ -95,7 +95,7 @@ owIDAQAB
       });
     });
 
-    it('Test Vector 1.3 - promise api', (done) => {
+    it('Test Vector 1-E-3 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce2)
@@ -108,7 +108,7 @@ owIDAQAB
         });
     });
 
-    it('Test Vector 1.4 - callback api', (done) => {
+    it('Test Vector 1-E-4 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce2, (err, token) => {
@@ -119,7 +119,7 @@ owIDAQAB
       });
     });
 
-    it('Test Vector 1.4 - promise api', (done) => {
+    it('Test Vector 1-E-4 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
 
       V1.__encrypt(message, symmetricKey, '', nonce2)
@@ -132,7 +132,7 @@ owIDAQAB
         });
     });
 
-    it('Test Vector 1.5 - callback api', (done) => {
+    it('Test Vector 1-E-5 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'UbkK8Y6iv4GZhFp6Tx3IWLWLfNXSEvJcdT3zdR65YZxo' });
 
@@ -144,7 +144,7 @@ owIDAQAB
       });
     });
 
-    it('Test Vector 1.5 - promise api', (done) => {
+    it('Test Vector 1-E-5 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'UbkK8Y6iv4GZhFp6Tx3IWLWLfNXSEvJcdT3zdR65YZxo' });
 
@@ -158,7 +158,7 @@ owIDAQAB
         });
     });
 
-    it('Test Vector 1.6 - callback api', (done) => {
+    it('Test Vector 1-E-6 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'UbkK8Y6iv4GZhFp6Tx3IWLWLfNXSEvJcdT3zdR65YZxo' });
 
@@ -170,7 +170,7 @@ owIDAQAB
       });
     });
 
-    it('Test Vector 1.6 - promise api', (done) => {
+    it('Test Vector 1-E-6 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'UbkK8Y6iv4GZhFp6Tx3IWLWLfNXSEvJcdT3zdR65YZxo' });
 
