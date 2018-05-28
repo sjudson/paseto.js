@@ -494,7 +494,7 @@ describe('Protocol V2', () => {
           });
       });
     });
-    /*
+
     describe('errors', () => {
 
       const InvalidVersionError = require('../lib/error/InvalidVersionError');
@@ -573,6 +573,5 @@ describe('Protocol V2', () => {
           });
       });
     });
-    */
   });
 });

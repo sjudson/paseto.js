@@ -1,7 +1,8 @@
 const assert = require('assert');
 const sodium = require('libsodium-wrappers');
 
-const Paseto = require('../lib/paseto');
+const Paseto    = require('../lib/paseto');
+const extcrypto = require('../extcrypto');
 
 describe('Protocol V1', () => {
 
@@ -272,6 +273,283 @@ describe('Protocol V1', () => {
 
             // nest so that we catch the right error
             return V2.decrypt(token, key, '')
+              .then((token) => {
+                assert.ok(false); // fail if we go through here
+              })
+              .catch((err) => {
+                assert.ok(err);
+
+                assert.ok(err instanceof InvalidVersionError);
+                assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+                done();
+              });
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+    });
+  });
+
+
+  describe('signing', () => {
+
+    let sk, pk, message, footer;
+
+    before(() => {
+      const AsymmetricSecretKeyV1 = Paseto.AsymmetricSecretKey.V1;
+      const AsymmetricPublicKeyV1 = Paseto.AsymmetricPublicKey.V1;
+
+      const rsk = extcrypto.keygen();
+      const rpk = extcrypto.extract(sk);
+
+      sk = new AsymmetricSecretKeyV1(rsk);
+      pk = new AsymmetricPublicKeyV1(rpk);
+
+      footer = 'footer';
+    });
+
+    describe('text', () => {
+
+      before(() => {
+        message = 'test';
+      });
+
+      it('should sign and verify successfully - callback api', (done) => {
+
+        V1.sign(message, sk, '', (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v1.public.');
+
+          V1.verify(token, pk, '', (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully - promise api', (done) => {
+
+        V1.sign(message, sk, '')
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v1.public.');
+
+            return V1.verify(token, pk, '');
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+
+      it('should sign and verify successfully with footer - callback api', (done) => {
+
+        V1.sign(message, sk, footer, (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v1.public.');
+
+          V1.verify(token, pk, footer, (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully with footer - promise api', (done) => {
+
+        V1.sign(message, sk, footer)
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v1.public.');
+
+            return V1.verify(token, pk, footer);
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+    });
+
+    describe('json (stringified)', () => {
+
+      before(() => {
+        const year = new Date().getUTCFullYear() + 1;
+        message = JSON.stringify({ data: 'this is a signed message', expires: year + '-01-01T00:00:00+00:00' });
+      });
+
+      it('should sign and verify successfully - callback api', (done) => {
+
+        V1.sign(message, sk, '', (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v1.public.');
+
+          V1.verify(token, pk, '', (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully - promise api', (done) => {
+
+        V1.sign(message, sk, '')
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v1.public.');
+
+            return V1.verify(token, pk, '');
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+
+      it('should sign and verify successfully with footer - callback api', (done) => {
+
+        V1.sign(message, sk, footer, (err, token) => {
+          if (err) { return done(err); }
+
+          assert.equal(typeof token, 'string');
+          assert.equal(token.substring(0, 10), 'v1.public.');
+
+          V1.verify(token, pk, footer, (err, data) => {
+            if (err) { return done(err); }
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            done();
+          });
+        });
+      });
+
+      it('should sign and verify successfully with footer - promise api', (done) => {
+
+        V1.sign(message, sk, footer)
+          .then((token) => {
+
+            assert.equal(typeof token, 'string');
+            assert.equal(token.substring(0, 10), 'v1.public.');
+
+            return V1.verify(token, pk, footer);
+          })
+          .then((data) => {
+
+            assert.equal(typeof data, 'string');
+            assert.equal(data, message);
+
+            return done();
+          })
+          .catch((err) => {
+            return done(err);
+          });
+      });
+    });
+
+    describe('errors', () => {
+
+      const InvalidVersionError = require('../lib/error/InvalidVersionError');
+
+      const V2 = new Paseto.V2();
+
+      it('should error on signing with an invalid key version - callback api', (done) => {
+
+        V1.sign('test', sk, '', function(err, token) {
+          assert.ok(err);
+          assert.ok(!token);
+
+          assert.ok(err instanceof InvalidVersionError);
+          assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+          done();
+        });
+      });
+
+      it('should error on signing with an invalid key version - promise api', (done) => {
+
+        V1.sign('test', sk, '')
+          .then((token) => {
+            assert.ok(false); // fail if we go through here
+          })
+          .catch((err) => {
+            assert.ok(err);
+
+            assert.ok(err instanceof InvalidVersionError);
+            assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+            done();
+          });
+      });
+
+      it('should error on verifying with an invalid key version - callback api', (done) => {
+
+        V1.sign('test', sk, '', function(err, token) {
+          if (err) { return done(err); }
+          assert.ok(token);
+
+          V2.verify(token, pk, '', function(err, token) {
+            assert.ok(err);
+            assert.ok(!token);
+
+            assert.ok(err instanceof InvalidVersionError);
+            assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
+
+            done();
+          });
+        });
+      });
+
+      it('should error on verifing with an invalid key version - promise api', (done) => {
+
+        V1.sign('test', sk, '')
+          .then((token) => {
+            assert.ok(token);
+
+            // nest so that we catch the right error
+            return V2.verify(token, pk, '')
               .then((token) => {
                 assert.ok(false); // fail if we go through here
               })
