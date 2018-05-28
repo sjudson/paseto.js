@@ -7,7 +7,7 @@ describe('Protocol V2', () => {
 
   const V2 = new Paseto.V2();
 
-  describe('keygen', () => {
+  describe.skip('keygen', () => {
 
     it('should generate a symmetric key', (done) => {
       const symmetric = V2.generateSymmetricKey();
