@@ -77,7 +77,7 @@ inherits@2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
 
-libsodium-wrappers@^0.7.3:
+libsodium-wrappers@0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/libsodium-wrappers/-/libsodium-wrappers-0.7.3.tgz#b7e6326a5c42eb269540e360ce9c2600eb90c75c"
   dependencies:
