@@ -8,10 +8,10 @@ describe('Protocol V1', () => {
 
   const V1 = new Paseto.V1();
 
-  describe.skip('keygen', () => {
+  describe('keygen', () => {
 
     it('should generate a symmetric key', (done) => {
-      const symmetric = V1.generateSymmetricKey();
+      const symmetric = Paseto.V1.generateSymmetricKey();
 
       assert.ok(symmetric instanceof Paseto.SymmetricKey);
       assert.equal(V1.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
@@ -20,7 +20,7 @@ describe('Protocol V1', () => {
     });
 
     it('should generate an asymmetric secret key', (done) => {
-      const asymmetric = V1.generateAsymmetricSecretKey();
+      const asymmetric = Paseto.V1.generateAsymmetricSecretKey();
 
       assert.ok(asymmetric instanceof Paseto.AsymmetricSecretKey);
       assert.equal('-----BEGIN RSA PRIVATE KEY-----', asymmetric.raw().slice(0, 31));
