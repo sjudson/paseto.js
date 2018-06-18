@@ -23,7 +23,6 @@ describe('Protocol V2', () => {
     it('should generate an asymmetric secret key', (done) => {
       Paseto.V2.PrivateKey((err, pk) => {
         if (err) { return done(err); }
-        console.log(pk);
 
         assert.ok(pk instanceof Paseto.PrivateKey);
         assert.equal(64, Buffer.byteLength(pk.raw()));
