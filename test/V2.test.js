@@ -3,7 +3,7 @@ const sodium = require('libsodium-wrappers');
 
 const Paseto = require('../lib/paseto');
 
-describe('Protocol V2', () => {
+describe.only('Protocol V2', () => {
 
   const V2 = new Paseto.V2();
 
@@ -32,13 +32,13 @@ describe('Protocol V2', () => {
 
     let key, message, footer;
 
-    before(() => {
-      const SymmetricKeyV2 = Paseto.SymmetricKey.V2;
+    before((done) => {
+      footer = 'footer';
 
       const rkey = Buffer.from(sodium.randombytes_buf(32));
-      key = new SymmetricKeyV2(rkey);
 
-      footer = 'footer';
+      key = new Paseto.SymmetricKey.V2();
+      key.inject(rkey, done);
     });
 
     describe('text', () => {
@@ -304,16 +304,18 @@ describe('Protocol V2', () => {
 
     let sk, pk, message, footer;
 
-    before(() => {
-      const AsymmetricSecretKeyV2 = Paseto.AsymmetricSecretKey.V2;
-      const AsymmetricPublicKeyV2 = Paseto.AsymmetricPublicKey.V2;
+    before((done) => {
+      footer = 'footer';
 
       const keypair = sodium.crypto_sign_keypair();
 
-      sk = new AsymmetricSecretKeyV2(keypair.privateKey);
-      pk = new AsymmetricPublicKeyV2(keypair.publicKey);
+      sk = new Paseto.PrivateKey.V2();
+      sk.inject(keypair.privateKey, (err) => {
+        if (err) { return done(err); }
 
-      footer = 'footer';
+        pk = new Paseto.PublicKey.V2();
+        pk.inject(keypair.publicKey, done);
+      });
     });
 
     describe('text', () => {

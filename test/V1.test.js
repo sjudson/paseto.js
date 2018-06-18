@@ -33,13 +33,13 @@ describe('Protocol V1', () => {
 
     let key, message, footer;
 
-    before(() => {
-      const SymmetricKeyV1 = Paseto.SymmetricKey.V1;
+    before((done) => {
+      footer = 'footer';
 
       const rkey = Buffer.from(sodium.randombytes_buf(32));
-      key = new SymmetricKeyV1(rkey);
 
-      footer = 'footer';
+      key = new Paseto.SymmetricKey.V1();
+      key.inject(rkey, done);
     });
 
     describe('text', () => {
@@ -306,17 +306,19 @@ describe('Protocol V1', () => {
 
     let sk, pk, message, footer;
 
-    before(() => {
-      const AsymmetricSecretKeyV1 = Paseto.AsymmetricSecretKey.V1;
-      const AsymmetricPublicKeyV1 = Paseto.AsymmetricPublicKey.V1;
+    before((done) => {
+      footer = 'footer';
 
       const rsk = extcrypto.keygen();
       const rpk = extcrypto.extract(rsk);
 
-      sk = new AsymmetricSecretKeyV1(rsk);
-      pk = new AsymmetricPublicKeyV1(rpk);
+      sk = new Paseto.PrivateKey.V1();
+      sk.inject(rsk, (err) => {
+        if (err) { return done(err); }
 
-      footer = 'footer';
+        pk = new Paseto.PublicKey.V1();
+        pk.inject(rpk, done);
+      });
     });
 
     describe('text', () => {
