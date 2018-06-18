@@ -11,24 +11,27 @@ describe('Protocol V2 Test Vectors', () => {
     // NOTE: Throughout these tests we use the undocumented __encrypt API, allowing us to
     //       provide custom nonce parameters, needed for aligning with known test vectors.
 
-    let symmetricKey, nonce1, nonce2, secretKey, publicKey;
+    let symmetricKey, nonce1, nonce2, privateKey, publicKey;
 
-    before(() => {
-      const SymmetricKeyV2 = Paseto.SymmetricKey.V2;
-
+    before((done) => {
       const skey   = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
-      symmetricKey = new SymmetricKeyV2(skey);
+      symmetricKey = new Paseto.SymmetricKey.V2();
+      symmetricKey.inject(skey, (err) => {
+        if (err) { return done(err); }
 
-      nonce1 = Buffer.alloc(24).fill(0);;
-      nonce2 = Buffer.from('45742c976d684ff84ebdc0de59809a97cda2f64c84fda19b', 'hex');
+        nonce1 = Buffer.alloc(24).fill(0);;
+        nonce2 = Buffer.from('45742c976d684ff84ebdc0de59809a97cda2f64c84fda19b', 'hex');
 
-      const AsymmetricSecretKeyV2 = Paseto.AsymmetricSecretKey.V2;
-      const AsymmetricPublicKeyV2 = Paseto.AsymmetricPublicKey.V2;
+        const prkey = Buffer.from('b4cbfb43df4ce210727d953e4a713307fa19bb7d9f85041438d9e11b942a37741eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
+        const pukey = Buffer.from('1eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
+        privateKey = new Paseto.PrivateKey.V2();
+        publicKey = new Paseto.PublicKey.V2();
 
-      const sekey = Buffer.from('b4cbfb43df4ce210727d953e4a713307fa19bb7d9f85041438d9e11b942a37741eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
-      const pukey = Buffer.from('1eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
-      secretKey = new AsymmetricSecretKeyV2(sekey);
-      publicKey = new AsymmetricPublicKeyV2(pukey);
+        privateKey.inject(prkey, (err) => {
+          if (err) { return done(err); }
+          publicKey.inject(pukey, done);
+        });
+      });
     });
 
     it('Test Vector 2-E-1 - callback api', (done) => {
@@ -182,7 +185,7 @@ describe('Protocol V2 Test Vectors', () => {
     it('Test Vector 2-S-1 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
 
-      V2.sign(message, secretKey, '', (err, token) => {
+      V2.sign(message, privateKey, '', (err, token) => {
         if (err) { return done(err); }
         assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9HQr8URrGntTu7Dz9J2IF23d1M7-9lH9xiqdGyJNvzp4angPW5Esc7C5huy_M8I8_DjJK2ZXC2SUYuOFM-Q_5Cw');
 
@@ -193,7 +196,7 @@ describe('Protocol V2 Test Vectors', () => {
     it('Test Vector 2-S-1 - promise api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
 
-      V2.sign(message, secretKey, '')
+      V2.sign(message, privateKey, '')
         .then((token) => {
           assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9HQr8URrGntTu7Dz9J2IF23d1M7-9lH9xiqdGyJNvzp4angPW5Esc7C5huy_M8I8_DjJK2ZXC2SUYuOFM-Q_5Cw');
           return done();
@@ -207,7 +210,7 @@ describe('Protocol V2 Test Vectors', () => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
 
-      V2.sign(message, secretKey, footer, (err, token) => {
+      V2.sign(message, privateKey, footer, (err, token) => {
         if (err) { return done(err); }
         assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9flsZsx_gYCR0N_Ec2QxJFFpvQAs7h9HtKwbVK2n1MJ3Rz-hwe8KUqjnd8FAnIJZ601tp7lGkguU63oGbomhoBw.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
 
@@ -219,7 +222,7 @@ describe('Protocol V2 Test Vectors', () => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
 
-      V2.sign(message, secretKey, footer)
+      V2.sign(message, privateKey, footer)
         .then((token) => {
           assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9flsZsx_gYCR0N_Ec2QxJFFpvQAs7h9HtKwbVK2n1MJ3Rz-hwe8KUqjnd8FAnIJZ601tp7lGkguU63oGbomhoBw.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
           return done();
@@ -237,17 +240,23 @@ describe('Protocol V2 Test Vectors', () => {
 
     let sk, nk, fk, nonce;
 
-    before(() => {
-      const SymmetricKeyV2 = Paseto.SymmetricKey.V2;
-
+    before((done) => {
       const skey = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
-      sk = new SymmetricKeyV2(skey);
+      sk = new Paseto.SymmetricKey.V2();
 
       const nkey = Buffer.alloc(32).fill(0);
-      nk = new SymmetricKeyV2(nkey);
+      nk = new Paseto.SymmetricKey.V2();
 
       const fkey = Buffer.alloc(32).fill(255, 0, 32);
-      fk = new SymmetricKeyV2(fkey);
+      fk = new Paseto.SymmetricKey.V2();
+
+      sk.inject(skey, (err) => {
+        if (err) { return done(err); }
+        nk.inject(nkey, (err) => {
+          if (err) { return done(err); }
+          fk.inject(fkey, done);
+        });
+      });
     });
 
     describe('#1', () => {
@@ -554,12 +563,17 @@ describe('Protocol V2 Test Vectors', () => {
 
     let sk, pk;
 
-    before(() => {
-      const AsymmetricSecretKeyV2 = Paseto.AsymmetricSecretKey.V2;
-      const AsymmetricPublicKeyV2 = Paseto.AsymmetricPublicKey.V2;
+    before((done) => {
+      const skey = Buffer.from('b4cbfb43df4ce210727d953e4a713307fa19bb7d9f85041438d9e11b942a37741eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
+      sk = new Paseto.PrivateKey.V2();
 
-      sk = new AsymmetricSecretKeyV2(Buffer.from('b4cbfb43df4ce210727d953e4a713307fa19bb7d9f85041438d9e11b942a37741eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex'));
-      pk = new AsymmetricPublicKeyV2(Buffer.from('1eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex'));
+      const pkey = Buffer.from('1eb9dbbbbc047c03fd70604e0071f0987e16b28b757225c11f00415d0e20b1a2', 'hex');
+      pk = new Paseto.PublicKey.V2();
+
+      sk.inject(skey, (err) => {
+        if (err) { return done(err); }
+        pk.inject(pkey, done);
+      });
     });
 
     it('#1 - Test Vector 2S-1 - callback api', (done) => {

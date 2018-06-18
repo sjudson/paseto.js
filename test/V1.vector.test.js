@@ -13,18 +13,16 @@ describe('Protocol V1 Test Vectors', () => {
 
     let symmetricKey, nonce1, nonce2, publicKey;
 
-    before(() => {
-      const SymmetricKeyV1 = Paseto.SymmetricKey.V1;
-
+    before((done) => {
       const skey   = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
-      symmetricKey = new SymmetricKeyV1(skey);
+      symmetricKey = new Paseto.SymmetricKey.V1();
+      symmetricKey.inject(skey, (err) => {
+        if (err) { return done(err); }
 
-      nonce1 = Buffer.alloc(32).fill(0);;
-      nonce2 = Buffer.from('26f7553354482a1d91d4784627854b8da6b8042a7966523c2b404e8dbbe7f7f2', 'hex');
+        nonce1 = Buffer.alloc(32).fill(0);;
+        nonce2 = Buffer.from('26f7553354482a1d91d4784627854b8da6b8042a7966523c2b404e8dbbe7f7f2', 'hex');
 
-      const AsymmetricPublicKeyV1 = Paseto.AsymmetricPublicKey.V1;
-
-      const pkey = `-----BEGIN PUBLIC KEY-----
+        const pkey = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyaTgTt53ph3p5GHgwoGW
 wz5hRfWXSQA08NCOwe0FEgALWos9GCjNFCd723nCHxBtN1qd74MSh/uN88JPIbwx
 KheDp4kxo4YMN5trPaF0e9G6Bj1N02HnanxFLW+gmLbgYO/SZYfWF/M8yLBcu5Y1
@@ -33,7 +31,9 @@ pVRuUI2Sd6L1E2vl9bSBumZ5IpNxkRnAwIMjeTJB/0AIELh0mE5vwdihOCbdV6al
 UyhKC1+1w/FW6HWcp/JG1kKC8DPIidZ78Bbqv9YFzkAbNni5eSBOsXVBKG78Zsc8
 owIDAQAB
 -----END PUBLIC KEY-----`;
-      publicKey = new AsymmetricPublicKeyV1(pkey);
+        publicKey = new Paseto.PublicKey.V1();
+        publicKey.inject(pkey, done);
+      });
     });
 
     it('Test Vector 1.1 - callback api', (done) => {
@@ -248,19 +248,25 @@ owIDAQAB
     // NOTE: Throughout these tests we use the undocumented __encrypt API, allowing us to
     //       provide custom nonce parameters, needed for aligning with known test vectors.
 
-    let symmetricKey, nullKey, fullKey, nonce;
+    let sk, nk, fk, nonce;
 
-    before(() => {
-      const SymmetricKeyV1 = Paseto.SymmetricKey.V1;
-
-      const skey   = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
-      symmetricKey = new SymmetricKeyV1(skey);
+    before((done) => {
+      const skey = Buffer.from('707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f', 'hex');
+      sk = new Paseto.SymmetricKey.V1();
 
       const nkey = Buffer.alloc(32).fill(0);
-      nullKey    = new SymmetricKeyV1(nkey);
+      nk = new Paseto.SymmetricKey.V1();
 
       const fkey = Buffer.alloc(32).fill(255, 0, 32);
-      fullKey    = new SymmetricKeyV1(fkey);
+      fk = new Paseto.SymmetricKey.V1();
+
+      sk.inject(skey, (err) => {
+        if (err) { return done(err); }
+        nk.inject(nkey, (err) => {
+          if (err) { return done(err); }
+          fk.inject(fkey, done);
+        });
+      });
     });
 
     describe('#1', () => {
@@ -270,7 +276,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-1-1 - callback api', (done) => {
-        V1.__encrypt('', nullKey, '', nonce, (err, token) => {
+        V1.__encrypt('', nk, '', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTXyNMehtdOLJS_vq4YzYdaZ6vwItmpjx-Lt3AtVanBmiMyzFyqJMHCaWVMpEMUyxUg');
@@ -279,7 +285,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-1-1 - promise api', (done) => {
-        V1.__encrypt('', nullKey, '', nonce)
+        V1.__encrypt('', nk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTXyNMehtdOLJS_vq4YzYdaZ6vwItmpjx-Lt3AtVanBmiMyzFyqJMHCaWVMpEMUyxUg');
             done();
@@ -290,7 +296,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-1-2 - callback api', (done) => {
-        V1.__encrypt('', fullKey, '', nonce, (err, token) => {
+        V1.__encrypt('', fk, '', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTWgetvu2STfe7gxkDpAOk_IXGmBeea4tGW6HsoH12oKElAWap57-PQMopNurtEoEdk');
@@ -299,7 +305,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-1-2 - promise api', (done) => {
-        V1.__encrypt('', fullKey, '', nonce)
+        V1.__encrypt('', fk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTWgetvu2STfe7gxkDpAOk_IXGmBeea4tGW6HsoH12oKElAWap57-PQMopNurtEoEdk');
             done();
@@ -310,7 +316,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-1-3 - callback api', (done) => {
-        V1.__encrypt('', symmetricKey, '', nonce, (err, token) => {
+        V1.__encrypt('', sk, '', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTV8OmiMvoZgzer20TE8kb3R0QN9Ay-ICSkDD1-UDznTCdBiHX1fbb53wdB5ng9nCDY');
@@ -319,7 +325,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-1-3 - promise api', (done) => {
-        V1.__encrypt('', symmetricKey, '', nonce)
+        V1.__encrypt('', sk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTV8OmiMvoZgzer20TE8kb3R0QN9Ay-ICSkDD1-UDznTCdBiHX1fbb53wdB5ng9nCDY');
             done();
@@ -337,7 +343,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-2-1 - callback api', (done) => {
-        V1.__encrypt('', nullKey, 'Cuon Alpinus', nonce, (err, token) => {
+        V1.__encrypt('', nk, 'Cuon Alpinus', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTVhyXOB4vmrFm9GvbJdMZGArV5_10Kxwlv4qSb-MjRGgFzPg00-T2TCFdmc9BMvJAA.Q3VvbiBBbHBpbnVz');
@@ -346,7 +352,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-2-1 - promise api', (done) => {
-        V1.__encrypt('', nullKey, 'Cuon Alpinus', nonce)
+        V1.__encrypt('', nk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTVhyXOB4vmrFm9GvbJdMZGArV5_10Kxwlv4qSb-MjRGgFzPg00-T2TCFdmc9BMvJAA.Q3VvbiBBbHBpbnVz');
             done();
@@ -357,7 +363,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-2-2 - callback api', (done) => {
-        V1.__encrypt('', fullKey, 'Cuon Alpinus', nonce, (err, token) => {
+        V1.__encrypt('', fk, 'Cuon Alpinus', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTVna3s7WqUwfQaVM8ddnvjPkrWkYRquX58-_RgRQTnHn7hwGJwKT3H23ZDlioSiJeo.Q3VvbiBBbHBpbnVz');
@@ -366,7 +372,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-2-2 - promise api', (done) => {
-        V1.__encrypt('', fullKey, 'Cuon Alpinus', nonce)
+        V1.__encrypt('', fk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTVna3s7WqUwfQaVM8ddnvjPkrWkYRquX58-_RgRQTnHn7hwGJwKT3H23ZDlioSiJeo.Q3VvbiBBbHBpbnVz');
             done();
@@ -377,7 +383,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-2-3 - callback api', (done) => {
-        V1.__encrypt('', symmetricKey, 'Cuon Alpinus', nonce, (err, token) => {
+        V1.__encrypt('', sk, 'Cuon Alpinus', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTW9MRfGNyfC8vRpl8xsgnsWt-zHinI9bxLIVF0c6INWOv0_KYIYEaZjrtumY8cyo7M.Q3VvbiBBbHBpbnVz');
@@ -386,7 +392,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-2-3 - promise api', (done) => {
-        V1.__encrypt('', symmetricKey, 'Cuon Alpinus', nonce)
+        V1.__encrypt('', sk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.bB8u6Tj60uJL2RKYR0OCyiGMdds9g-EUs9Q2d3bRTTW9MRfGNyfC8vRpl8xsgnsWt-zHinI9bxLIVF0c6INWOv0_KYIYEaZjrtumY8cyo7M.Q3VvbiBBbHBpbnVz');
             done();
@@ -404,7 +410,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-3-1 - callback api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', nullKey, '', nonce, (err, token) => {
+        V1.__encrypt('Love is stronger than hate or fear', nk, '', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.N9n3wL3RJUckyWdg4kABZeMwaAfzNT3B64lhyx7QA45LtwQCqG8LYmNfBHIX-4Uxfm8KzaYAUUHqkxxv17MFxsEvk-Ex67g9P-z7EBFW09xxSt21Xm1ELB6pxErl4RE1gGtgvAm9tl3rW2-oy6qHlYx2');
@@ -413,7 +419,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-3-1 - promise api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', nullKey, '', nonce)
+        V1.__encrypt('Love is stronger than hate or fear', nk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.N9n3wL3RJUckyWdg4kABZeMwaAfzNT3B64lhyx7QA45LtwQCqG8LYmNfBHIX-4Uxfm8KzaYAUUHqkxxv17MFxsEvk-Ex67g9P-z7EBFW09xxSt21Xm1ELB6pxErl4RE1gGtgvAm9tl3rW2-oy6qHlYx2');
             done();
@@ -424,7 +430,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-3-2 - callback api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', fullKey, '', nonce, (err, token) => {
+        V1.__encrypt('Love is stronger than hate or fear', fk, '', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.N9n3wL3RJUckyWdg4kABZeMwaAfzNT3B64lhyx7QA47lQ79wMmeM7sC4c0-BnsXzIteEQQBQpu_FyMznRnzYg4gN-6Kt50rXUxgPPfwDpOr3lUb5U16RzIGrMNemKy0gRhfKvAh1b8N57NKk93pZLpEz');
@@ -433,7 +439,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-3-2 - promise api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', fullKey, '', nonce)
+        V1.__encrypt('Love is stronger than hate or fear', fk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.N9n3wL3RJUckyWdg4kABZeMwaAfzNT3B64lhyx7QA47lQ79wMmeM7sC4c0-BnsXzIteEQQBQpu_FyMznRnzYg4gN-6Kt50rXUxgPPfwDpOr3lUb5U16RzIGrMNemKy0gRhfKvAh1b8N57NKk93pZLpEz');
             done();
@@ -444,7 +450,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-3-3 - callback api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', symmetricKey, '', nonce, (err, token) => {
+        V1.__encrypt('Love is stronger than hate or fear', sk, '', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.N9n3wL3RJUckyWdg4kABZeMwaAfzNT3B64lhyx7QA47hvAicYf1zfZrxPrLeBFdbEKO3JRQdn3gjqVEkR1aXXttscmmZ6t48tfuuudETldFD_xbqID74_TIDO1JxDy7OFgYI_PehxzcapQ8t040Fgj9k');
@@ -453,7 +459,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-3-3 - promise api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', symmetricKey, '', nonce)
+        V1.__encrypt('Love is stronger than hate or fear', sk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.N9n3wL3RJUckyWdg4kABZeMwaAfzNT3B64lhyx7QA47hvAicYf1zfZrxPrLeBFdbEKO3JRQdn3gjqVEkR1aXXttscmmZ6t48tfuuudETldFD_xbqID74_TIDO1JxDy7OFgYI_PehxzcapQ8t040Fgj9k');
             done();
@@ -471,7 +477,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-4-1 - callback api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', nullKey, 'Cuon Alpinus', nonce, (err, token) => {
+        V1.__encrypt('Love is stronger than hate or fear', nk, 'Cuon Alpinus', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.rElw-WywOuwAqKC9Yao3YokSp7vx0YiUB9hLTnsVOYbivwqsESBnr82_ZoMFFGzolJ6kpkOihkulB4K_JhfMHoFw4E9yCR6ltWX3e9MTNSud8mpBzZiwNXNbgXBLxF_Igb5Ixo_feIonmCucOXDlLVUT.Q3VvbiBBbHBpbnVz');
@@ -480,7 +486,7 @@ owIDAQAB
       });
 
       it('#1 - Test Vector 1E-4-1 - promise api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', nullKey, 'Cuon Alpinus', nonce)
+        V1.__encrypt('Love is stronger than hate or fear', nk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.rElw-WywOuwAqKC9Yao3YokSp7vx0YiUB9hLTnsVOYbivwqsESBnr82_ZoMFFGzolJ6kpkOihkulB4K_JhfMHoFw4E9yCR6ltWX3e9MTNSud8mpBzZiwNXNbgXBLxF_Igb5Ixo_feIonmCucOXDlLVUT.Q3VvbiBBbHBpbnVz');
             done();
@@ -491,7 +497,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-4-2 - callback api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', fullKey, 'Cuon Alpinus', nonce, (err, token) => {
+        V1.__encrypt('Love is stronger than hate or fear', fk, 'Cuon Alpinus', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.rElw-WywOuwAqKC9Yao3YokSp7vx0YiUB9hLTnsVOYZ8rQTA12SNb9cY8jVtVyikY2jj_tEBzY5O7GJsxb5MdQ6cMSnDz2uJGV20vhzVDgvkjdEcN9D44VaHid26qy1_1YlHjU6pmyTmJt8WT21LqzDl.Q3VvbiBBbHBpbnVz');
@@ -500,7 +506,7 @@ owIDAQAB
       });
 
       it('#2 - Test Vector 1E-4-2 - promise api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', fullKey, 'Cuon Alpinus', nonce)
+        V1.__encrypt('Love is stronger than hate or fear', fk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.rElw-WywOuwAqKC9Yao3YokSp7vx0YiUB9hLTnsVOYZ8rQTA12SNb9cY8jVtVyikY2jj_tEBzY5O7GJsxb5MdQ6cMSnDz2uJGV20vhzVDgvkjdEcN9D44VaHid26qy1_1YlHjU6pmyTmJt8WT21LqzDl.Q3VvbiBBbHBpbnVz');
             done();
@@ -511,7 +517,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-4-3 - callback api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', symmetricKey, 'Cuon Alpinus', nonce, (err, token) => {
+        V1.__encrypt('Love is stronger than hate or fear', sk, 'Cuon Alpinus', nonce, (err, token) => {
           if (err) { return done(err); }
 
           assert.equal(token, 'v1.local.rElw-WywOuwAqKC9Yao3YokSp7vx0YiUB9hLTnsVOYYTojmVaYumJSQt8aggtCaFKWyaodw5k-CUWhYKATopiabAl4OAmTxHCfm2E4NSPvrmMcmi8n-JcZ93HpcxC6rx_ps22vutv7iP7wf8QcSD1Mwx.Q3VvbiBBbHBpbnVz');
@@ -520,7 +526,7 @@ owIDAQAB
       });
 
       it('#3 - Test Vector 1E-4-3 - promise api', (done) => {
-        V1.__encrypt('Love is stronger than hate or fear', symmetricKey, 'Cuon Alpinus', nonce)
+        V1.__encrypt('Love is stronger than hate or fear', sk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v1.local.rElw-WywOuwAqKC9Yao3YokSp7vx0YiUB9hLTnsVOYYTojmVaYumJSQt8aggtCaFKWyaodw5k-CUWhYKATopiabAl4OAmTxHCfm2E4NSPvrmMcmi8n-JcZ93HpcxC6rx_ps22vutv7iP7wf8QcSD1Mwx.Q3VvbiBBbHBpbnVz');
             done();

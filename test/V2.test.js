@@ -3,7 +3,7 @@ const sodium = require('libsodium-wrappers');
 
 const Paseto = require('../lib/paseto');
 
-describe.only('Protocol V2', () => {
+describe('Protocol V2', () => {
 
   const V2 = new Paseto.V2();
 
