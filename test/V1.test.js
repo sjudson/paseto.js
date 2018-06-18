@@ -11,21 +11,25 @@ describe('Protocol V1', () => {
   describe('keygen', () => {
 
     it('should generate a symmetric key', (done) => {
-      const symmetric = Paseto.V1.generateSymmetricKey();
+      Paseto.V1.SymmetricKey((err, sk) => {
+        if (err) { return done(err); }
 
-      assert.ok(symmetric instanceof Paseto.SymmetricKey);
-      assert.equal(V1.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
+        assert.ok(sk instanceof Paseto.SymmetricKey);
+        assert.equal(V1.sklength(), Buffer.byteLength(sk.raw()));
 
-      done();
+        done();
+      });
     });
 
     it('should generate an asymmetric secret key', (done) => {
-      const asymmetric = Paseto.V1.generateAsymmetricSecretKey();
+      Paseto.V1.PrivateKey((err, pk) => {
+        if (err) { return done(err); }
 
-      assert.ok(asymmetric instanceof Paseto.AsymmetricSecretKey);
-      assert.equal('-----BEGIN RSA PRIVATE KEY-----', asymmetric.raw().slice(0, 31));
+        assert.ok(pk instanceof Paseto.PrivateKey);
+        assert.equal('-----BEGIN RSA PRIVATE KEY-----', pk.raw().slice(0, 31));
 
-      done();
+        done();
+      });
     });
   });
 

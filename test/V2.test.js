@@ -10,21 +10,26 @@ describe('Protocol V2', () => {
   describe('keygen', () => {
 
     it('should generate a symmetric key', (done) => {
-      const symmetric = Paseto.V2.generateSymmetricKey();
+      Paseto.V2.SymmetricKey((err, sk) => {
+        if (err) { return done(err); }
 
-      assert.ok(symmetric instanceof Paseto.SymmetricKey);
-      assert.equal(V2.getSymmetricKeyByteLength(), Buffer.byteLength(symmetric.raw()));
+        assert.ok(sk instanceof Paseto.SymmetricKey);
+        assert.equal(V2.sklength(), Buffer.byteLength(sk.raw()));
 
-      done();
+        done();
+      });
     });
 
     it('should generate an asymmetric secret key', (done) => {
-      const asymmetric = Paseto.V2.generateAsymmetricSecretKey();
+      Paseto.V2.PrivateKey((err, pk) => {
+        if (err) { return done(err); }
+        console.log(pk);
 
-      assert.ok(asymmetric instanceof Paseto.AsymmetricSecretKey);
-      assert.equal(64, Buffer.byteLength(asymmetric.raw()));
+        assert.ok(pk instanceof Paseto.PrivateKey);
+        assert.equal(64, Buffer.byteLength(pk.raw()));
 
-      done();
+        done();
+      });
     });
   });
 
