@@ -6,7 +6,17 @@ This repository holds `paseto.js`, an implementation of PASETO for Javascript, p
 
 ## Node.js
 
-Ultimately, `paseto.js` will support two different APIs.
+Ultimately, `paseto.js` will support two different APIs. To install, run
+
+```bash
+$ npm install paseto
+```
+
+or
+
+```bash
+$ yarn add paseto
+```
 
 #### High Level API
 
