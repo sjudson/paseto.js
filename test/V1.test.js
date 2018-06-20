@@ -11,7 +11,7 @@ describe('Protocol V1', () => {
   describe('keygen', () => {
 
     it('should generate a symmetric key', (done) => {
-      Paseto.V1.SymmetricKey((err, sk) => {
+      V1.symmetric((err, sk) => {
         if (err) { return done(err); }
 
         assert.ok(sk instanceof Paseto.SymmetricKey);
@@ -21,8 +21,8 @@ describe('Protocol V1', () => {
       });
     });
 
-    it('should generate an asymmetric secret key', (done) => {
-      Paseto.V1.PrivateKey((err, pk) => {
+    it('should generate a private key', (done) => {
+      V1.private((err, pk) => {
         if (err) { return done(err); }
 
         assert.ok(pk instanceof Paseto.PrivateKey);
