@@ -9,13 +9,13 @@ This repository holds `paseto.js`, an implementation of PASETO for Javascript, p
 Ultimately, `paseto.js` will support two different APIs. To install, run
 
 ```bash
-$ npm install paseto
+$ npm install paseto.js
 ```
 
 or
 
 ```bash
-$ yarn add paseto
+$ yarn add paseto.js
 ```
 
 #### High Level API
@@ -27,7 +27,7 @@ The high level API has not yet been implemented, and its completion will be an i
 The low level API is what is currently implemented, and allows for direct construction and manipulation of PASETOs. It requires constructing two core objects, an instantiation of a specific version of the protocol (presently V1 or V2) and a suitable key.
 
 ```js
-const Paseto = require('paseto');
+const Paseto = require('paseto.js');
 
 const encoder = new Paseto.V2();
 encoder.symmetric()
