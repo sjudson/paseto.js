@@ -105,7 +105,7 @@ At present PASETO specifies two variants, `V1` and `V2`. Choosing between these 
 
 ##### Local
 
-Local PASETO tokens are secured using an authenticated encryption scheme, either - if `V2` - XChaCha20-Poly1305 - or if `V1` - AES-256-CTR with HMAC-SHA384. They are accessible using the `encrypt` and `decrypt` methods for sending and receiving respectively.
+Local PASETOs are secured using an authenticated encryption scheme, either - if `V2` - XChaCha20-Poly1305 - or if `V1` - AES-256-CTR with HMAC-SHA384. They are accessible using the `encrypt` and `decrypt` methods for sending and receiving respectively.
 
 ```js
 const encoder = new Paseto.V1();
@@ -133,7 +133,7 @@ encoder.symmetric()
 
 ##### Public
 
-Public PASETO tokens are secured using a signature scheme, meaning _they are not encrypted, only authenticated_. The scheme used is either - if `V2` - ed25519 - or if `V1` - RSASSA-PSS over SHA-384. They are accessible using the `sign` and `verify` methods for sending and receiving respectively. If using `V1`, the provided keys must be PEM encoded.
+Public PASETOs are secured using a signature scheme, meaning _they are not encrypted, only authenticated_. The scheme used is either - if `V2` - ed25519 - or if `V1` - RSASSA-PSS over SHA-384. They are accessible using the `sign` and `verify` methods for sending and receiving respectively. If using `V1`, the provided keys must be PEM encoded.
 
 ```js
 const signer   = new Paseto.V2();
@@ -163,7 +163,7 @@ signer.private()
 
 ##### Footers
 
-The library includes support for footers, which are provided as a third argument to the `encrypt`, `decrypt`, `sign`, and `verify` methods. _NB: Before using footers it is highly recommended that you read the pertinent part of the RFC draft discussing their security_.
+The library includes support for footers, which are provided as a third argument to the `encrypt`, `decrypt`, `sign`, and `verify` methods. _NB: Before using footers it is highly recommended that you read the RFC, which contains pertinent information on their security_.
 
 ```js
 const encoder = new Paseto.V2();
