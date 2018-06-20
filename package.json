@@ -1,6 +1,6 @@
 {
   "name": "paseto.js",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "PASETO: Platform-Agnostic Security Tokens",
   "main": "lib/paseto.js",
   "author": "Samuel Judson",
