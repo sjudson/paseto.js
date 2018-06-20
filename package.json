@@ -6,7 +6,7 @@
   "author": "Samuel Judson",
   "license": "MIT",
   "dependencies": {
-    "libsodium-wrappers": "0.7.3"
+    "libsodium-wrappers-sumo": "0.7.3"
   },
   "devDependencies": {
     "mocha": "^5.0.1"
