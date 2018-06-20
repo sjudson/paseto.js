@@ -24,7 +24,7 @@ The high level API has not yet been implemented, and its completion will be an i
 
 #### Low Level API
 
-The low level API is what is currently implemented, and allows for direct construction and manipulation of PASETOs. It requires constructing two core objects, an instantiation of a specific version of the protocol (presently V1 or V2) and a suitable key.
+The low level API is what is currently implemented, and allows for direct construction and manipulation of PASETOs. It requires constructing two core objects, an instantiation of a specific version of the protocol (presently `V1` or `V2`) and a suitable key.
 
 ```js
 const Paseto = require('paseto.js');
@@ -45,7 +45,7 @@ encoder.symmetric()
 
 ##### Key Generation and Injection
 
-Creation of key and protocol objects can be driven either through either, provided you want `paseto.js` to generate the cryptographic keys for you.
+Creation of key and protocol objects can be driven through either, provided you want `paseto.js` to generate the cryptographic keys for you.
 
 ```js
 // first pattern
@@ -163,7 +163,7 @@ signer.private()
 
 ##### Footers
 
-The library includes support for footers, which are provided as a third argument to the `encrypt`, `decrypt`, `sign`, and `verify` methods. _NB: Before using footers it is extremely recommended that you read the pertinent part of the RFC draft covering security considerations regarding them_.
+The library includes support for footers, which are provided as a third argument to the `encrypt`, `decrypt`, `sign`, and `verify` methods. _NB: Before using footers it is highly recommended that you read the pertinent part of the RFC draft discussing their security_.
 
 ```js
 const encoder = new Paseto.V2();
