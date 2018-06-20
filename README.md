@@ -1,6 +1,6 @@
 # paseto.js
 
-PASETO (aka Platform Agnostic SEcurity TOkens) are an alternative to JWT, SAML, and any other cryptographically verified serialization format. They are a natural, drop-in replacement, well-suited for the same use cases - e.g., as bearer tokens in an authorization and/or authentication scheme - except significantly simpler and easier to use securely. For more information, there's a [basic overview](https://paragonie.com/blog/2018/03/paseto-platform-agnostic-security-tokens-is-secure-alternative-jose-standards-jwt-etc), a [website](https://paseto.io/) and [draft RFC](https://paseto.io/rfc/), and the documentation in the PHP [reference implementation](https://github.com/paragonie/paseto).
+PASETO (aka Platform Agnostic SEcurity TOkens) is an alternative to JWT, SAML, and any other cryptographically verified serialization format. They are a natural, drop-in replacement, well-suited for the same use cases - e.g., as bearer tokens in an authorization and/or authentication scheme - except significantly simpler and easier to use securely. For more information, there's a [basic overview](https://paragonie.com/blog/2018/03/paseto-platform-agnostic-security-tokens-is-secure-alternative-jose-standards-jwt-etc), a [website](https://paseto.io/) and [draft RFC](https://paseto.io/rfc/), and the documentation in the PHP [reference implementation](https://github.com/paragonie/paseto).
 
 This repository holds `paseto.js`, an implementation of PASETO for Javascript, primarily the Node.js runtime but browser support is intended as well.
 
