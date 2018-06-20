@@ -1,6 +1,6 @@
 # paseto.js
 
-PASETO (aka Platform Agnostic SEcurity TOkens) is an alternative to JWT, SAML, and any other cryptographically verified serialization format. They are a natural, drop-in replacement, well-suited for the same use cases - e.g., as bearer tokens in an authorization and/or authentication scheme - except significantly simpler and easier to use securely. For more information, there's a [basic overview](https://paragonie.com/blog/2018/03/paseto-platform-agnostic-security-tokens-is-secure-alternative-jose-standards-jwt-etc), a [website](https://paseto.io/) and [draft RFC](https://paseto.io/rfc/), and the documentation in the PHP [reference implementation](https://github.com/paragonie/paseto).
+PASETO (aka Platform Agnostic SEcurity TOken) is an alternative to JWT, SAML, and any other cryptographically verified serialization format. It is a natural, drop-in replacement, well-suited for the same use cases - e.g., as bearer tokens in an authorization and/or authentication scheme - except significantly simpler and easier to use securely. For more information, there's an [overview](https://paragonie.com/blog/2018/03/paseto-platform-agnostic-security-tokens-is-secure-alternative-jose-standards-jwt-etc), a [website](https://paseto.io/) and [draft RFC](https://paseto.io/rfc/), and the documentation in the PHP [reference implementation](https://github.com/paragonie/paseto).
 
 This repository holds `paseto.js`, an implementation of PASETO for Javascript, primarily the Node.js runtime but browser support is intended as well.
 
@@ -225,4 +225,4 @@ Limited browser support (solely for verification of public tokens) is intended f
 
 ## Incidentals
 
-This library was written and is maintained by [Samuel Judson](https://github.com/sjudson/). It is published under the MIT License. Pull requests and issues are welcome, however the intent is to maintain parity with the reference implementation, so non-specification feature requests will be redirected there.
+This library was written and is maintained by [Samuel Judson](https://github.com/sjudson). It is published under the MIT License. Pull requests and issues are welcome, however the intent is to maintain parity with the reference implementation, so non-specification feature requests will be redirected there.
