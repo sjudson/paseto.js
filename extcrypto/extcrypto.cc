@@ -69,6 +69,18 @@ namespace extcrypto {
     uint64_t kl = BIO_pending(bio);
     char* key   = (char *) calloc(kl + 1, 1);
 
+    if (!key || (kl == UINT64_MAX)) {
+      free(key); // in case compiler dependent behavior for calloc after overflow returns a non-null pointer
+      rval = String::NewFromUtf8(isolate, "Unable to generate key");
+
+      if (!async) {
+        args.GetReturnValue().Set(rval);
+        return;
+      }
+
+      return async_eret(isolate, cb, rval);
+    }
+
     BIO_read(bio, key, kl);
 
     BIO_vfree(bio);
@@ -112,6 +124,19 @@ namespace extcrypto {
 
     uint64_t kl = BIO_pending(bio);
     char* pkey  = (char *) calloc(kl + 1, 1);
+
+    if (!pkey || (kl == UINT64_MAX)) {
+      free(pkey); // in case compiler dependent behavior for calloc after overflow returns a non-null pointer
+      rval = String::NewFromUtf8(isolate, "Unable to extract key");
+
+      if (!async) {
+        args.GetReturnValue().Set(rval);
+        return;
+      }
+
+      return async_eret(isolate, cb, rval);
+    }
+
     BIO_read(bio, pkey, kl);
 
     BIO_vfree(bio);
