@@ -1,5 +1,6 @@
 // extcrypto.cc - some openssl wrappers to extend RSA support
 #include <node.h>
+#include <stdint.h>
 #include <string.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
@@ -19,17 +20,17 @@ namespace extcrypto {
   using v8::Value;
 
 
-  void async_ret(Isolate* isolate, Local<Function> cb, Local<String> statement) {
+  void async_ret(Isolate* isolate, Local<Function> cb, Local<String> rval) {
     const unsigned argc = 2;
-    Local<Value> argv[argc] = { Null(isolate), statement };
+    Local<Value> argv[argc] = { Null(isolate), rval };
 
     cb->Call(Null(isolate), argc, argv);
   }
 
 
-  void async_eret(Isolate* isolate, Local<Function> cb, Local<String> statement) {
-    const unsigned argc = 1;
-    Local<Value> argv[argc] = { Exception::Error(statement) };
+  void async_eret(Isolate* isolate, Local<Function> cb, Local<String> rval) {
+    const uint64_t argc = 1;
+    Local<Value> argv[argc] = { Exception::Error(rval) };
 
     cb->Call(Null(isolate), argc, argv);
   }
@@ -38,42 +39,53 @@ namespace extcrypto {
   void keygen(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
     Local<Function> cb;
+    Local<String> rval;
 
     bool async = args.Length() > 0;
     if (async) { cb = Local<Function>::Cast(args[0]); }
 
+    // begin keygen
+
     BIGNUM* exp = BN_new();
     BN_set_word(exp, RSA_F4); // 65537
 
-    RSA* rsa    = RSA_new();
-    unsigned kg = RSA_generate_key_ex(rsa, 2048, exp, NULL);
+    RSA* rsa   = RSA_new();
+    int64_t kg = RSA_generate_key_ex(rsa, 2048, exp, NULL);
 
     if (!kg) {
+      rval = String::NewFromUtf8(isolate, "Unable to generate key");
+
       if (!async) {
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, "Unable to generate key"));
+        args.GetReturnValue().Set(rval);
         return;
       }
 
-      return async_eret(isolate, cb, String::NewFromUtf8(isolate, "Unable to generate key"));
+      return async_eret(isolate, cb, rval);
     }
 
     BIO* bio = BIO_new(BIO_s_mem());
     PEM_write_bio_RSAPrivateKey(bio, rsa, NULL, NULL, 0, NULL, NULL);
 
-    unsigned kl = BIO_pending(bio);
+    uint64_t kl = BIO_pending(bio);
     char* key   = (char *) calloc(kl + 1, 1);
+
     BIO_read(bio, key, kl);
 
     BIO_vfree(bio);
     RSA_free(rsa);
     BN_free(exp);
 
+    // return
+
+    rval = String::NewFromUtf8(isolate, key);
+    free(key);
+
     if (!async) {
-      args.GetReturnValue().Set(String::NewFromUtf8(isolate, key));
+      args.GetReturnValue().Set(rval);
       return;
     }
 
-    async_ret(isolate, cb, String::NewFromUtf8(isolate, key));
+    async_ret(isolate, cb, rval);
   }
 
 
@@ -81,6 +93,9 @@ namespace extcrypto {
     Isolate* isolate  = args.GetIsolate();
     Local<String> pem = Local<String>::Cast(args[0]);
     Local<Function> cb;
+    Local<String> rval;
+
+    // begin extraction
 
     bool async = args.Length() > 1;
     if (async) { cb = Local<Function>::Cast(args[1]); }
@@ -95,19 +110,24 @@ namespace extcrypto {
     PEM_read_bio_RSAPrivateKey(bio, &rsa, NULL, NULL);
     PEM_write_bio_RSAPublicKey(bio, rsa);
 
-    unsigned kl = BIO_pending(bio);
+    uint64_t kl = BIO_pending(bio);
     char* pkey  = (char *) calloc(kl + 1, 1);
     BIO_read(bio, pkey, kl);
 
     BIO_vfree(bio);
     RSA_free(rsa);
 
+    // return
+
+    rval = String::NewFromUtf8(isolate, pkey);
+    free(pkey);
+
     if (!async) {
-      args.GetReturnValue().Set(String::NewFromUtf8(isolate, pkey));
+      args.GetReturnValue().Set(rval);
       return;
     }
 
-    async_ret(isolate, cb, String::NewFromUtf8(isolate, pkey));
+    async_ret(isolate, cb, rval);
   }
 
 
