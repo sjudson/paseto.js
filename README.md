@@ -63,7 +63,7 @@ sk.generate().then(() => { return encoder.encrypt(message, sk); });
 
 // second pattern
 const encoder = new Paseto.V2();
-encoder.symmetric().then(pk => { return encoder.encrypt(message, sk); });
+encoder.symmetric().then(sk => { return encoder.encrypt(message, sk); });
 ```
 
 You may also provide the keying material youself, but doing so requires using the first pattern.
