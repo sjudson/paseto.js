@@ -49,6 +49,9 @@ declare namespace Paseto {
         public encode(): string;
         public raw(): Buffer;
 
+        /**
+         * return the corresponding public key object
+         */
         public public(): Promise<PublicKey<P>>
     }
 
