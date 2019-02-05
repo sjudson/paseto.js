@@ -48,6 +48,8 @@ declare namespace Paseto {
         public protocol(): P;
         public encode(): string;
         public raw(): Buffer;
+
+        public public(): Promise<PublicKey<P>>
     }
 
     /**
@@ -62,11 +64,6 @@ declare namespace Paseto {
         public protocol(): P;
         public encode(): string;
         public raw(): Buffer;
-
-        /**
-         * return the corresponding public key object
-         */
-        public public(): Promise<PublicKey<P>>;
     }
 
     /**
@@ -135,12 +132,12 @@ declare namespace Paseto {
         /**
          * generate a private key for use with the protocol
          */
-        pk(): Promise<PrivateKey<this>>;
+        private(): Promise<PrivateKey<this>>;
 
         /**
          * generate a symmetric key for use with the protocol
          */
-        sk(): Promise<SymmetricKey<this>>;
+        symmetric(): Promise<SymmetricKey<this>>;
 
         /**
          * get protocol representation
@@ -177,8 +174,8 @@ declare namespace Paseto {
      * protocol version 1
      */
     export class V1 implements IProtocol {
-        public pk(): Promise<PrivateKey<this>>;
-        public sk(): Promise<SymmetricKey<this>>;
+        public private(): Promise<PrivateKey<this>>;
+        public symmetric(): Promise<SymmetricKey<this>>;
         public repr(): string;
         public sklength(): number;
         public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
@@ -191,8 +188,8 @@ declare namespace Paseto {
      * protocol version 2
      */
     export class V2 implements IProtocol {
-        public pk(): Promise<PrivateKey<this>>;
-        public sk(): Promise<SymmetricKey<this>>;
+        public private(): Promise<PrivateKey<this>>;
+        public symmetric(): Promise<SymmetricKey<this>>;
         public repr(): string;
         public sklength(): number;
         public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
