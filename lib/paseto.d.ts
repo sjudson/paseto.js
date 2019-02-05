@@ -1,5 +1,5 @@
 declare namespace Paseto {
-    interface Key<P extends Protocol> {
+    interface IPasetoKey<P extends IProtocol> {
         /**
          * complete construction asynchronously
          */
@@ -39,48 +39,48 @@ declare namespace Paseto {
     /**
      * private key for asymmetric cryptography
      */
-    export class PrivateKey<P extends Protocol> implements Key<P> {
+    export class PrivateKey<P extends IProtocol> implements IPasetoKey<P> {
         constructor(proto: P);
-        inject(rkey: Buffer): Promise<void>;
-        base64(skey: string): Promise<void>;
-        hex(skey: string): Promise<void>;
-        generate(): Promise<void>;
-        protocol(): P;
-        encode(): string;
-        raw(): Buffer;
+        public inject(rkey: Buffer): Promise<void>;
+        public base64(skey: string): Promise<void>;
+        public hex(skey: string): Promise<void>;
+        public generate(): Promise<void>;
+        public protocol(): P;
+        public encode(): string;
+        public raw(): Buffer;
     }
 
     /**
      * public key for asymmetric cryptography
      */
-    export class PublicKey<P extends Protocol> implements Key<P> {
+    export class PublicKey<P extends IProtocol> implements IPasetoKey<P> {
         constructor(proto: P);
-        inject(rkey: Buffer): Promise<void>;
-        base64(skey: string): Promise<void>;
-        hex(skey: string): Promise<void>;
-        generate(): Promise<void>;
-        protocol(): P;
-        encode(): string;
-        raw(): Buffer;
+        public inject(rkey: Buffer): Promise<void>;
+        public base64(skey: string): Promise<void>;
+        public hex(skey: string): Promise<void>;
+        public generate(): Promise<void>;
+        public protocol(): P;
+        public encode(): string;
+        public raw(): Buffer;
 
         /**
          * return the corresponding public key object
          */
-        public(): Promise<PublicKey<P>>;
+        public public(): Promise<PublicKey<P>>;
     }
 
     /**
      * secret key for symmetric cryptography
      */
-    export class SymmetricKey<P extends Protocol> implements Key<P> {
+    export class SymmetricKey<P extends IProtocol> implements IPasetoKey<P> {
         constructor(proto: P);
-        inject(rkey: Buffer): Promise<void>;
-        base64(skey: string): Promise<void>;
-        hex(skey: string): Promise<void>;
-        generate(): Promise<void>;
-        protocol(): P;
-        encode(): string;
-        raw(): Buffer;
+        public inject(rkey: Buffer): Promise<void>;
+        public base64(skey: string): Promise<void>;
+        public hex(skey: string): Promise<void>;
+        public generate(): Promise<void>;
+        public protocol(): P;
+        public encode(): string;
+        public raw(): Buffer;
     }
 
     namespace PrivateKey {
@@ -131,7 +131,7 @@ declare namespace Paseto {
         }
     }
 
-    interface Protocol {
+    interface IProtocol {
         /**
          * generate a private key for use with the protocol
          */
@@ -176,29 +176,29 @@ declare namespace Paseto {
     /**
      * protocol version 1
      */
-    export class V1 implements Protocol {
-        pk(): Promise<PrivateKey<this>>;
-        sk(): Promise<SymmetricKey<this>>;
-        repr(): string;
-        sklength(): number;
-        encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
-        decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
-        sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
-        verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
+    export class V1 implements IProtocol {
+        public pk(): Promise<PrivateKey<this>>;
+        public sk(): Promise<SymmetricKey<this>>;
+        public repr(): string;
+        public sklength(): number;
+        public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
+        public verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
     }
 
     /**
      * protocol version 2
      */
-    export class V2 implements Protocol {
-        pk(): Promise<PrivateKey<this>>;
-        sk(): Promise<SymmetricKey<this>>;
-        repr(): string;
-        sklength(): number;
-        encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
-        decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
-        sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
-        verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
+    export class V2 implements IProtocol {
+        public pk(): Promise<PrivateKey<this>>;
+        public sk(): Promise<SymmetricKey<this>>;
+        public repr(): string;
+        public sklength(): number;
+        public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
+        public verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
     }
 }
 
