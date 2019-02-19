@@ -10,6 +10,7 @@
     "libsodium-wrappers-sumo": "0.7.3"
   },
   "devDependencies": {
+    "@types/node": "^10.12.21",
     "mocha": "^5.0.1"
   },
   "scripts": {
