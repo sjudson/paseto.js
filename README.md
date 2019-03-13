@@ -99,6 +99,18 @@ sk.base64(b64)
 
 When in doubt, invoking the `inject` method with a raw `Buffer` is always the safest way to make sure `paseto.js` employs the key properly.
 
+##### Key Extraction
+
+To extract raw keying material for storage, you may use either the `encode` or `raw` methods on key objects. The former returns the key material encoded in Base64 (url safe), the latter returns a `Buffer` with raw bytes.
+
+```js
+const b64sk = sk.encode();
+```
+
+The `inject` and associated methods discussed above then allow this keying material to be used for future token processing.
+
+Secure handling and storage of keying material is outside the scope of the library.
+
 ##### V1 or V2
 
 At present PASETO specifies two variants, `V1` and `V2`. Choosing between these is simple - always pick `V2`. The specification of `V1` is intended for when you do not have a choice, and legacy or non-technical considerations force the use of older, less efficient and secure cryptographic constructions. Whenever possible, it is _strongly recommended_ that `V2` is used. For more, see [here](https://github.com/paragonie/paseto/tree/master/docs/01-Protocol-Versions).
