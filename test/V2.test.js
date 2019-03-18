@@ -314,11 +314,11 @@ describe('Protocol V2', () => {
       const keypair = sodium.crypto_sign_keypair();
 
       sk = new Paseto.PrivateKey.V2();
-      sk.inject(keypair.privateKey, (err) => {
+      sk.inject(Buffer.from(keypair.privateKey, 'binary'), (err) => {
         if (err) { return done(err); }
 
         pk = new Paseto.PublicKey.V2();
-        pk.inject(keypair.publicKey, done);
+        pk.inject(Buffer.from(keypair.publicKey, 'binary'), done);
       });
     });
 
