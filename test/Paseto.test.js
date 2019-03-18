@@ -3,6 +3,8 @@ const sodium = require('libsodium-wrappers-sumo');
 
 const Paseto = require('../lib/paseto');
 
+const notExpired = require('../lib/rules/notexpired')
+
 describe('Paseto', () => {
 
 	const Builder = new Paseto.Builder();
@@ -14,6 +16,29 @@ describe('Paseto', () => {
 	describe('V2', () => {
 		let key, footer;
 
+		describe('claims', () => {
+			it('should be able to set the exp claim', () => {
+				let time = new Date();
+				let tokenBuilder = Builder.setExpiration(time);
+				let formattedTime = time.toISOString();
+
+				assert.ok(tokenBuilder.token.get('exp') === formattedTime)
+			});
+		})
+
+		describe('rules', () => {
+			it('should be able to check if a token is expired', () => {
+				let time = new Date();
+				time.setDate(time.getDate() + 1);
+				let tokenBuilder = Builder.setExpiration(time);
+
+				let isValid;
+				isValid = Parser.addRule(new notExpired()).validate(tokenBuilder.token);
+				assert.ok(isValid);
+
+				assert.throws(function () {Parser.addRule(new notExpired(time.setDate(time.getDate() + 1))).validate(tokenBuilder.token)}, Error);
+			})
+		})
 
 		describe('local', () => {
 			before((done) => {
@@ -29,6 +54,7 @@ describe('Paseto', () => {
 			it('should be able to encrypt and decrypt a local token', async () => {
 				try {
 					let tokenBuilder;
+
 					tokenBuilder = Builder.setKey(key).setFooter(footer).setPurpose('local').setFooter(footer).setClaims(claims);
 
 					let decryptedToken;
