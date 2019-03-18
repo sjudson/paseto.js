@@ -29,7 +29,7 @@ describe('Paseto', () => {
 		describe('rules', () => {
 			it('should be able to check if a token is expired', () => {
 				let time = new Date();
-				time.setDate(time.getDate() + 1);
+				time.setDate(new Date(time.getDate() + 1));
 				let tokenBuilder = Builder.setExpiration(time);
 
 				let isValid;
