@@ -3,12 +3,10 @@ const sodium = require('libsodium-wrappers-sumo');
 
 const Paseto = require('../lib/paseto');
 
-const notExpired = require('../lib/rules/notexpired')
+const notExpired = require('../lib/rules/notexpired');
+const issuedBy = require('../lib/rules/issuedby');
 
 describe('Paseto', () => {
-
-	const Builder = new Paseto.Builder();
-	const Parser = new Paseto.Parser();
 
 	const footer = 'footer';
 	const claims = {"first": "1", "second": "2"};
@@ -19,7 +17,7 @@ describe('Paseto', () => {
 		describe('claims', () => {
 			it('should be able to set the exp claim', () => {
 				let time = new Date();
-				let tokenBuilder = Builder.setExpiration(time);
+				let tokenBuilder = new Paseto.Builder().setExpiration(time);
 				let formattedTime = time.toISOString();
 
 				assert.ok(tokenBuilder.token.get('exp') === formattedTime)
@@ -27,17 +25,45 @@ describe('Paseto', () => {
 		})
 
 		describe('rules', () => {
-			it('should be able to check if a token is expired', () => {
+			it('should be able to check if a token is not expired', () => {
 				let time = new Date();
 				time.setDate(new Date(time.getDate() + 1));
-				let tokenBuilder = Builder.setExpiration(time);
-
+				let tokenBuilder = new Paseto.Builder().setExpiration(time);
+                let tokenParser = new Paseto.Parser();
 				let isValid;
-				isValid = Parser.addRule(new notExpired()).validate(tokenBuilder.token);
+				isValid = tokenParser.addRule(new notExpired()).validate(tokenBuilder.token);
 				assert.ok(isValid);
 
 				assert.throws(function () {Parser.addRule(new notExpired(time.setDate(time.getDate() + 1))).validate(tokenBuilder.token)}, Error);
 			})
+
+            it('should be able to check if a token is expired', () => {
+                let time = new Date();
+                time.setDate(new Date(time.getDate() + 1));
+                let tokenBuilder = new Paseto.Builder().setExpiration(time);
+                let tokenParser = new Paseto.Parser();
+
+                assert.throws(function () {tokenParser.addRule(new notExpired(time.setDate(time.getDate() + 1))).validate(tokenBuilder.token)}, Error);
+            })
+
+            it('should be able to check the issuer of the token is valid', () => {
+                let issuer = 'Issuer';
+                let tokenBuilder = new Paseto.Builder().setIssuer(issuer);
+                let tokenParser = new Paseto.Parser();
+
+                let isValid;
+                isValid = tokenParser.addRule(new issuedBy(issuer)).validate(tokenBuilder.token);
+
+                assert.ok(isValid);
+            })
+
+            it('should be able to check the issuer of the token is invalid', () => {
+                let issuer = 'Issuer';
+                let tokenBuilder = new Paseto.Builder().setIssuer(issuer);
+                let tokenParser = new Paseto.Parser();
+
+                assert.throws(function () {tokenParser.addRule(new issuedBy('differentIssuer')).validate(tokenBuilder.token)}, Error);
+            })
 		})
 
 		describe('local', () => {
@@ -53,12 +79,10 @@ describe('Paseto', () => {
 
 			it('should be able to encrypt and decrypt a local token', async () => {
 				try {
-					let tokenBuilder;
-
-					tokenBuilder = Builder.setKey(key).setFooter(footer).setPurpose('local').setFooter(footer).setClaims(claims);
-
+					let tokenBuilder = new Paseto.Builder().setKey(key).setFooter(footer).setPurpose('local').setFooter(footer).setClaims(claims);
+                    let tokenParser = new Paseto.Parser();
 					let decryptedToken;
-					decryptedToken = await Parser.setKey(key).parse(await tokenBuilder.toString());
+					decryptedToken = await tokenParser.setKey(key).parse(await tokenBuilder.toString());
 					assert.deepEqual(tokenBuilder.token, decryptedToken);
 					return true;
 				} catch (Exception) {
@@ -85,11 +109,10 @@ describe('Paseto', () => {
 
 			it('should be able to sign and verify a public token', async () => {
 				try {
-					let tokenBuilder;
-					tokenBuilder = Builder.setKey(sk).setFooter(footer).setPurpose('public').setFooter(footer).setClaims(claims);
-
+					let tokenBuilder = new Paseto.Builder().setKey(sk).setFooter(footer).setPurpose('public').setFooter(footer).setClaims(claims);
+                    let tokenParser = new Paseto.Parser();
 					let decryptedToken;
-					decryptedToken = await Parser.setKey(pk).parse(await tokenBuilder.toString());
+					decryptedToken = await tokenParser.setKey(pk).parse(await tokenBuilder.toString());
 					assert.deepEqual(tokenBuilder.token, decryptedToken);
 					return true;
 				} catch (Exception) {
