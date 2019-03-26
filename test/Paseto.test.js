@@ -12,8 +12,6 @@ describe('Paseto', () => {
 	const claims = {"first": "1", "second": "2"};
 
 	describe('V2', () => {
-		let key, footer;
-
 		describe('claims', () => {
 			it('should be able to set the exp claim', () => {
 				let time = new Date();
@@ -69,7 +67,6 @@ describe('Paseto', () => {
 		describe('local', () => {
 			before((done) => {
 				sodium.ready.then(() => {
-					footer = 'footer';
 					const rkey = Buffer.from(sodium.randombytes_buf(32));
 
 					key = new Paseto.SymmetricKey.V2();
@@ -80,7 +77,7 @@ describe('Paseto', () => {
 			it('should be able to encrypt and decrypt a local token', async () => {
 				try {
 					let tokenBuilder = new Paseto.Builder().setKey(key).setFooter(footer).setPurpose('local').setFooter(footer).setClaims(claims);
-                    let tokenParser = new Paseto.Parser();
+          let tokenParser = new Paseto.Parser();
 					let decryptedToken;
 					decryptedToken = await tokenParser.setKey(key).parse(await tokenBuilder.toString());
 					assert.deepEqual(tokenBuilder.token, decryptedToken);
@@ -92,8 +89,8 @@ describe('Paseto', () => {
 		})
 
 		describe('public', () => {
+      let sk, pk;
 	    before((done) => {
-	    	let footer = 'footer';
 				sodium.ready.then(() => {
 		      const keypair = sodium.crypto_sign_keypair();
 
@@ -110,7 +107,7 @@ describe('Paseto', () => {
 			it('should be able to sign and verify a public token', async () => {
 				try {
 					let tokenBuilder = new Paseto.Builder().setKey(sk).setFooter(footer).setPurpose('public').setFooter(footer).setClaims(claims);
-                    let tokenParser = new Paseto.Parser();
+          let tokenParser = new Paseto.Parser();
 					let decryptedToken;
 					decryptedToken = await tokenParser.setKey(pk).parse(await tokenBuilder.toString());
 					assert.deepEqual(tokenBuilder.token, decryptedToken);
