@@ -1,8 +1,0 @@
-FROM node:8-alpine AS nodealpine
-RUN apk add --no-cache make g++ python && \
-    python -m ensurepip && \
-    rm -r /usr/lib/python*/ensurepip && \
-    pip install --upgrade pip setuptools && \
-    rm -r /root/.cache && \
-    npm install -g npm && \
-    npm install -g yarn
