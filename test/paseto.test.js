@@ -3,8 +3,7 @@ const sodium = require('libsodium-wrappers-sumo');
 
 const Paseto = require('../lib/paseto');
 
-const notExpired = require('../lib/rules/notexpired');
-const issuedBy = require('../lib/rules/issuedby');
+const { notExpired, issuedBy } = require('../lib/rules');
 
 describe('Paseto', () => {
 
@@ -70,7 +69,7 @@ describe('Paseto', () => {
 					const rkey = Buffer.from(sodium.randombytes_buf(32));
 
 					key = new Paseto.SymmetricKey.V2();
-					key.inject(rkey, done);
+          key.inject(rkey, done);
 				})
 			});
 
@@ -95,11 +94,11 @@ describe('Paseto', () => {
 		      const keypair = sodium.crypto_sign_keypair();
 
 		      sk = new Paseto.PrivateKey.V2();
-		      sk.inject(keypair.privateKey, (err) => {
+		      sk.inject(Buffer.from(keypair.privateKey, 'binary'), (err) => {
 		        if (err) { return done(err); }
 
 		        pk = new Paseto.PublicKey.V2();
-		        pk.inject(keypair.publicKey, done);
+		        pk.inject(Buffer.from(keypair.publicKey, 'binary'), done);
 		      });
 	    	});
 	    });
