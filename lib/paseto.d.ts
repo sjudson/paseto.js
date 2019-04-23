@@ -4,21 +4,25 @@ declare namespace Paseto {
          * complete construction asynchronously
          */
         inject(rkey: Buffer): Promise<void>;
+        inject(rkey: Buffer, cb: (err: Error) => void): void;
 
         /**
          * complete construction asynchronously using base64 encoded key
          */
         base64(skey: string): Promise<void>;
+        base64(skey: string, cb: (err: Error) => void): void;
 
         /**
          * complete construction asynchronously using hex encoded key
          */
         hex(skey: string): Promise<void>;
+        hex(skey: string, cb: (err: Error) => void): void;
 
         /**
          * complete construction asynchronously, generating key
          */
         generate(): Promise<void>;
+        generate(cb: (err: Error) => void): void;
 
         /**
          * return the underlying protocol object
@@ -36,15 +40,27 @@ declare namespace Paseto {
         raw(): Buffer;
     }
 
+    interface IPasetoKeyV1 extends IPasetoKey<V1> {}
+    interface IPasetoKeyV2 extends IPasetoKey<V2> {}
+
     /**
      * private key for asymmetric cryptography
      */
     export class PrivateKey<P extends IProtocol> implements IPasetoKey<P> {
         constructor(proto: P);
+
         public inject(rkey: Buffer): Promise<void>;
+        public inject(rkey: Buffer, cb: (err: Error) => void): void;
+
         public base64(skey: string): Promise<void>;
+        public base64(skey: string, cb: (err: Error) => void): void;
+
         public hex(skey: string): Promise<void>;
+        public hex(skey: string, cb: (err: Error) => void): void;
+
         public generate(): Promise<void>;
+        public generate(cb: (err: Error) => void): void;
+
         public protocol(): P;
         public encode(): string;
         public raw(): Buffer;
@@ -52,7 +68,8 @@ declare namespace Paseto {
         /**
          * return the corresponding public key object
          */
-        public public(): Promise<PublicKey<P>>
+        public public(): Promise<PublicKey<P>>;
+        public public(cb: (err: Error, key: PublicKey<P>) => void): void;
     }
 
     /**
@@ -60,10 +77,19 @@ declare namespace Paseto {
      */
     export class PublicKey<P extends IProtocol> implements IPasetoKey<P> {
         constructor(proto: P);
+
         public inject(rkey: Buffer): Promise<void>;
+        public inject(rkey: Buffer, cb: (err: Error) => void): void;
+
         public base64(skey: string): Promise<void>;
+        public base64(skey: string, cb: (err: Error) => void): void;
+
         public hex(skey: string): Promise<void>;
+        public hex(skey: string, cb: (err: Error) => void): void;
+
         public generate(): Promise<void>;
+        public generate(cb: (err: Error) => void): void;
+
         public protocol(): P;
         public encode(): string;
         public raw(): Buffer;
@@ -74,10 +100,19 @@ declare namespace Paseto {
      */
     export class SymmetricKey<P extends IProtocol> implements IPasetoKey<P> {
         constructor(proto: P);
+
         public inject(rkey: Buffer): Promise<void>;
+        public inject(rkey: Buffer, cb: (err: Error) => void): void;
+
         public base64(skey: string): Promise<void>;
+        public base64(skey: string, cb: (err: Error) => void): void;
+
         public hex(skey: string): Promise<void>;
+        public hex(skey: string, cb: (err: Error) => void): void;
+
         public generate(): Promise<void>;
+        public generate(cb: (err: Error) => void): void
+
         public protocol(): P;
         public encode(): string;
         public raw(): Buffer;
@@ -136,11 +171,13 @@ declare namespace Paseto {
          * generate a private key for use with the protocol
          */
         private(): Promise<PrivateKey<this>>;
+        private(cb: (err: Error, key: PrivateKey<this>) => void): void
 
         /**
          * generate a symmetric key for use with the protocol
          */
         symmetric(): Promise<SymmetricKey<this>>;
+        symmetric(cb: (err: Error, key: SymmetricKey<this>) => void): void
 
         /**
          * get protocol representation
@@ -156,21 +193,25 @@ declare namespace Paseto {
          * symmetric authenticated encryption
          */
         encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        encrypt(data: Buffer|string, key: SymmetricKey<this>, footer: Buffer|string|undefined, cb: (err: Error, token: string) => void): void
 
         /**
          * symmetric authenticated decryption
          */
         decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        decrypt(token: string, key: SymmetricKey<this>, footer: Buffer|string|undefined, cb: (err: Error, data: string) => void): void;
 
         /**
          * asymmetric authentication
          */
         sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
+        sign(data: Buffer|string, key: PrivateKey<this>, footer: Buffer|string|undefined, cb: (err: Error, token: string) => void): void;
 
         /**
          * asymmetric authentication
          */
         verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
+        verify(token: string, key: PublicKey<this>, footer: Buffer|string|undefined, cb: (err: Error, data: string) => void): void;
     }
 
     /**
@@ -178,13 +219,25 @@ declare namespace Paseto {
      */
     export class V1 implements IProtocol {
         public private(): Promise<PrivateKey<this>>;
+        public private(cb: (err: Error, key: PrivateKey<this>) => void): void
+
         public symmetric(): Promise<SymmetricKey<this>>;
-        public repr(): string;
+        public symmetric(cb: (err: Error, key: SymmetricKey<this>) => void): void
+
+        public repr(): 'v1';
         public sklength(): number;
+
         public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer: Buffer|string|undefined, cb: (err: Error, token: string) => void): void
+
         public decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public decrypt(token: string, key: SymmetricKey<this>, footer: Buffer|string|undefined, cb: (err: Error, data: string) => void): void;
+
         public sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
+        public sign(data: Buffer|string, key: PrivateKey<this>, footer: Buffer|string|undefined, cb: (err: Error, token: string) => void): void;
+
         public verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
+        public verify(token: string, key: PublicKey<this>, footer: Buffer|string|undefined, cb: (err: Error, data: string) => void): void;
     }
 
     /**
@@ -192,13 +245,25 @@ declare namespace Paseto {
      */
     export class V2 implements IProtocol {
         public private(): Promise<PrivateKey<this>>;
+        public private(cb: (err: Error, key: PrivateKey<this>) => void): void
+
         public symmetric(): Promise<SymmetricKey<this>>;
-        public repr(): string;
+        public symmetric(cb: (err: Error, key: SymmetricKey<this>) => void): void
+
+        public repr(): 'v2';
         public sklength(): number;
+
         public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public encrypt(data: Buffer|string, key: SymmetricKey<this>, footer: Buffer|string|undefined, cb: (err: Error, token: string) => void): void
+
         public decrypt(token: string, key: SymmetricKey<this>, footer?: Buffer|string): Promise<string>;
+        public decrypt(token: string, key: SymmetricKey<this>, footer: Buffer|string|undefined, cb: (err: Error, data: string) => void): void;
+
         public sign(data: Buffer|string, key: PrivateKey<this>, footer?: Buffer|string): Promise<string>;
+        public sign(data: Buffer|string, key: PrivateKey<this>, footer: Buffer|string|undefined, cb: (err: Error, token: string) => void): void;
+
         public verify(token: string, key: PublicKey<this>, footer?: Buffer|string): Promise<string>;
+        public verify(token: string, key: PublicKey<this>, footer: Buffer|string|undefined, cb: (err: Error, data: string) => void): void;
     }
 }
 
