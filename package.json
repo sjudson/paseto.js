@@ -7,11 +7,11 @@
   "author": "Samuel Judson",
   "license": "MIT",
   "dependencies": {
-    "libsodium-wrappers": "^0.7.4"
+    "libsodium-wrappers": "0.7.6"
   },
   "devDependencies": {
     "@types/node": "^11.11.3",
-    "mocha": "^5.0.1"
+    "mocha": "^6.2.2"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha ./test"
