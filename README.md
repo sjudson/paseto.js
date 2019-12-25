@@ -111,6 +111,10 @@ The `inject` and associated methods discussed above then allow this keying mater
 
 Secure handling and storage of keying material is outside the scope of the library.
 
+##### Message Encoding
+
+Pursuant to the PASETO spec, all messages and footers must be `utf-8` encoded. It is recommended that binary data be encoded into Base64 (url safe) format to meet this requirement.
+
 ##### V1 or V2
 
 At present PASETO specifies two variants, `V1` and `V2`. Choosing between these is simple - always pick `V2`. The specification of `V1` is intended for when you do not have a choice, and legacy or non-technical considerations force the use of older, less efficient and secure cryptographic constructions. Whenever possible, it is _strongly recommended_ that `V2` is used. For more, see [here](https://github.com/paragonie/paseto/tree/master/docs/01-Protocol-Versions).
