@@ -1,5 +1,6 @@
 // extcrypto.cc - some openssl wrappers to extend RSA support
 #include <node.h>
+#include <nan.h>
 #include <stdint.h>
 #include <string.h>
 #include <openssl/rsa.h>
@@ -24,7 +25,7 @@ namespace extcrypto {
     const unsigned argc = 2;
     Local<Value> argv[argc] = { Null(isolate), rval };
 
-    cb->Call(Null(isolate), argc, argv);
+    Nan::Call(Nan::Callback(cb), argc, argv);
   }
 
 
@@ -32,7 +33,7 @@ namespace extcrypto {
     const uint64_t argc = 1;
     Local<Value> argv[argc] = { Exception::Error(rval) };
 
-    cb->Call(Null(isolate), argc, argv);
+    Nan::Call(Nan::Callback(cb), argc, argv);
   }
 
 
@@ -53,7 +54,7 @@ namespace extcrypto {
     int64_t kg = RSA_generate_key_ex(rsa, 2048, exp, NULL);
 
     if (!kg) {
-      rval = String::NewFromUtf8(isolate, "Unable to generate key");
+      rval = Nan::New("Unable to generate key").ToLocalChecked();
 
       if (!async) {
         args.GetReturnValue().Set(rval);
@@ -71,7 +72,7 @@ namespace extcrypto {
 
     if (!key || (kl == UINT64_MAX)) {
       free(key); // in case compiler dependent behavior for calloc after overflow returns a non-null pointer
-      rval = String::NewFromUtf8(isolate, "Unable to generate key");
+      rval = Nan::New("Unable to generate key").ToLocalChecked();
 
       if (!async) {
         args.GetReturnValue().Set(rval);
@@ -89,7 +90,7 @@ namespace extcrypto {
 
     // return
 
-    rval = String::NewFromUtf8(isolate, key);
+    rval = Nan::New(key).ToLocalChecked();
     free(key);
 
     if (!async) {
@@ -112,7 +113,7 @@ namespace extcrypto {
     bool async = args.Length() > 1;
     if (async) { cb = Local<Function>::Cast(args[1]); }
 
-    String::Utf8Value ipem(pem);
+    Nan::Utf8String ipem(pem);
     char* skey(*ipem);
 
     BIO* bio = BIO_new(BIO_s_mem());
@@ -127,7 +128,7 @@ namespace extcrypto {
 
     if (!pkey || (kl == UINT64_MAX)) {
       free(pkey); // in case compiler dependent behavior for calloc after overflow returns a non-null pointer
-      rval = String::NewFromUtf8(isolate, "Unable to extract key");
+      rval = Nan::New("Unable to extract key").ToLocalChecked();
 
       if (!async) {
         args.GetReturnValue().Set(rval);
@@ -144,7 +145,7 @@ namespace extcrypto {
 
     // return
 
-    rval = String::NewFromUtf8(isolate, pkey);
+    rval = Nan::New(pkey).ToLocalChecked();
     free(pkey);
 
     if (!async) {
