@@ -1,5 +1,5 @@
 const assert = require('assert');
-const sodium = require('libsodium-wrappers-sumo');
+const sodium = require('libsodium-wrappers');
 
 const Paseto    = require('../lib/paseto');
 const extcrypto = require('../extcrypto');
