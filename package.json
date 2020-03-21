@@ -7,7 +7,7 @@
   "author": "Samuel Judson",
   "license": "MIT",
   "dependencies": {
-    "libsodium-wrappers": "0.7.6",
+    "libsodium-wrappers-sumo": "0.7.6",
     "nan": "^2.14.0"
   },
   "devDependencies": {
