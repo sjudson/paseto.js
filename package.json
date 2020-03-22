@@ -1,6 +1,6 @@
 {
   "name": "paseto.js",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "PASETO: Platform-Agnostic Security Tokens",
   "main": "lib/paseto.js",
   "types": "lib/paseto.d.ts",
