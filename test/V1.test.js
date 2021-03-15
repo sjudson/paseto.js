@@ -1,8 +1,8 @@
+const crypto = require('crypto');
 const assert = require('assert');
 const sodium = require('libsodium-wrappers-sumo');
 
 const Paseto    = require('../lib/paseto');
-const extcrypto = require('../extcrypto');
 
 describe('Protocol V1', () => {
 
@@ -472,15 +472,20 @@ describe('Protocol V1', () => {
       footer = 'footer';
       encoded_footer = 'Zm9vdGVy';
 
-      const rsk = extcrypto.keygen();
-      const rpk = extcrypto.extract(rsk);
-
-      sk = new Paseto.PrivateKey.V1();
-      sk.inject(rsk, (err) => {
+      return crypto.generateKeyPair('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
+        privateKeyEncoding: { type: 'pkcs1', format: 'pem' }
+      }, (err, rpk, rsk) => {
         if (err) { return done(err); }
 
-        pk = new Paseto.PublicKey.V1();
-        pk.inject(rpk, done);
+        sk = new Paseto.PrivateKey.V1();
+        sk.inject(rsk, (err) => {
+          if (err) { return done(err); }
+
+          pk = new Paseto.PublicKey.V1();
+          pk.inject(rpk, done);
+        });
       });
     });
 
