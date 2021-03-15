@@ -51,11 +51,23 @@ describe('Protocol V2 Test Vectors', () => {
       V2.__encrypt(message, symmetricKey, '', nonce1)
         .then((token) => {
           assert.equal(token, 'v2.local.97TTOvgwIxNGvV80XKiGZg_kD3tsXM_-qB4dZGHOeN1cTkgQ4PnW8888l802W8d9AvEGnoNBY3BnqHORy8a5cC8aKpbA0En8XELw2yDk2f1sVODyfnDbi6rEGMY3pSfCbLWMM2oHJxvlEl2XbQ');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-E-1 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+        const token = await V2.__encrypt(message, symmetricKey, '', nonce1);
+        assert.equal(token, 'v2.local.97TTOvgwIxNGvV80XKiGZg_kD3tsXM_-qB4dZGHOeN1cTkgQ4PnW8888l802W8d9AvEGnoNBY3BnqHORy8a5cC8aKpbA0En8XELw2yDk2f1sVODyfnDbi6rEGMY3pSfCbLWMM2oHJxvlEl2XbQ');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('Test Vector 2-E-2 - callback api', (done) => {
@@ -75,11 +87,23 @@ describe('Protocol V2 Test Vectors', () => {
       V2.__encrypt(message, symmetricKey, '', nonce1)
         .then((token) => {
           assert.equal(token, 'v2.local.CH50H-HM5tzdK4kOmQ8KbIvrzJfjYUGuu5Vy9ARSFHy9owVDMYg3-8rwtJZQjN9ABHb2njzFkvpr5cOYuRyt7CRXnHt42L5yZ7siD-4l-FoNsC7J2OlvLlIwlG06mzQVunrFNb7Z3_CHM0PK5w');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-E-2 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+
+        const token = await V2.__encrypt(message, symmetricKey, '', nonce1);
+        assert.equal(token, 'v2.local.CH50H-HM5tzdK4kOmQ8KbIvrzJfjYUGuu5Vy9ARSFHy9owVDMYg3-8rwtJZQjN9ABHb2njzFkvpr5cOYuRyt7CRXnHt42L5yZ7siD-4l-FoNsC7J2OlvLlIwlG06mzQVunrFNb7Z3_CHM0PK5w');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('Test Vector 2-E-3 - callback api', (done) => {
@@ -99,11 +123,23 @@ describe('Protocol V2 Test Vectors', () => {
       V2.__encrypt(message, symmetricKey, '', nonce2)
         .then((token) => {
           assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-O5xRBN076fSDPo5xUCPpBA');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-E-3 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+        const token = await V2.__encrypt(message, symmetricKey, '', nonce2);
+        assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-O5xRBN076fSDPo5xUCPpBA');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('Test Vector 2-E-4 - callback api', (done) => {
@@ -123,11 +159,23 @@ describe('Protocol V2 Test Vectors', () => {
       V2.__encrypt(message, symmetricKey, '', nonce2)
         .then((token) => {
           assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DPbIxtjGvNRAwsLK7LcV8oQ');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-E-4 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+
+        const token = await V2.__encrypt(message, symmetricKey, '', nonce2);
+        assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DPbIxtjGvNRAwsLK7LcV8oQ');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('Test Vector 2-E-5 - callback api', (done) => {
@@ -149,11 +197,24 @@ describe('Protocol V2 Test Vectors', () => {
       V2.__encrypt(message, symmetricKey, footer, nonce2)
         .then((token) => {
           assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-zSLIrxZqOLwcFLYbVK1SrQ.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-E-5 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+        const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+        const token = await V2.__encrypt(message, symmetricKey, footer, nonce2);
+        assert.equal(token, 'v2.local.5K4SCXNhItIhyNuVIZcwrdtaDKiyF81-eWHScuE0idiVqCo72bbjo07W05mqQkhLZdVbxEa5I_u5sgVk1QLkcWEcOSlLHwNpCkvmGGlbCdNExn6Qclw3qTKIIl5-zSLIrxZqOLwcFLYbVK1SrQ.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('Test Vector 2-E-6 - callback api', (done) => {
@@ -175,11 +236,24 @@ describe('Protocol V2 Test Vectors', () => {
       V2.__encrypt(message, symmetricKey, footer, nonce2)
         .then((token) => {
           assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DnMXKdHn_Smp6L_NfaEnZ-A.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-E-6 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a secret message', exp: '2019-01-01T00:00:00+00:00'});
+        const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+        const token = await V2.__encrypt(message, symmetricKey, footer, nonce2);
+        assert.equal(token, 'v2.local.pvFdDeNtXxknVPsbBCZF6MGedVhPm40SneExdClOxa9HNR8wFv7cu1cB0B4WxDdT6oUc2toyLR6jA6sc-EUM5ll1EkeY47yYk6q8m1RCpqTIzUrIu3B6h232h62DnMXKdHn_Smp6L_NfaEnZ-A.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('Test Vector 2-S-1 - callback api', (done) => {
@@ -206,6 +280,18 @@ describe('Protocol V2 Test Vectors', () => {
         });
     });
 
+    it('Test Vector 2-S-1 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+
+        const token = await V2.sign(message, privateKey, '');
+        assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9HQr8URrGntTu7Dz9J2IF23d1M7-9lH9xiqdGyJNvzp4angPW5Esc7C5huy_M8I8_DjJK2ZXC2SUYuOFM-Q_5Cw');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
+    });
+
     it('Test Vector 2-S-2 - callback api', (done) => {
       const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
       const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
@@ -230,6 +316,19 @@ describe('Protocol V2 Test Vectors', () => {
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('Test Vector 2-S-2 - async/await api', (done) => {
+      (async () => {
+        const message = JSON.stringify({ data: 'this is a signed message', exp: '2019-01-01T00:00:00+00:00'});
+        const footer  = JSON.stringify({ kid: 'zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN' });
+
+        const token = await V2.sign(message, privateKey, footer);
+        assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9flsZsx_gYCR0N_Ec2QxJFFpvQAs7h9HtKwbVK2n1MJ3Rz-hwe8KUqjnd8FAnIJZ601tp7lGkguU63oGbomhoBw.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
   });
 
@@ -278,11 +377,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('', nk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNUtKpdy5KXjKfpSKrOlqQvQ');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#1 - Test Vector 2E-1-1 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('', nk, '', nonce);
+          assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNUtKpdy5KXjKfpSKrOlqQvQ');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#2 - Test Vector 2E-1-2 - callback api', (done) => {
@@ -298,11 +407,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('', fk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNSOvpveyCsjPYfe9mtiJDVg');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#2 - Test Vector 2E-1-2 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('', fk, '', nonce);
+          assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNSOvpveyCsjPYfe9mtiJDVg');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#3 - Test Vector 2E-1-3 - callback api', (done) => {
@@ -318,11 +437,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('', sk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNkIWACdHuLiJiW16f2GuGYA');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#3 - Test Vector 2E-1-3 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('', sk, '', nonce);
+          assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNkIWACdHuLiJiW16f2GuGYA');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
     });
 
@@ -345,11 +474,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('', nk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNfzz6yGkE4ZxojJAJwKLfvg.Q3VvbiBBbHBpbnVz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#1 - Test Vector 2E-2-1 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('', nk, 'Cuon Alpinus', nonce);
+          assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNfzz6yGkE4ZxojJAJwKLfvg.Q3VvbiBBbHBpbnVz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#2 - Test Vector 2E-2-2 - callback api', (done) => {
@@ -365,11 +504,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('', fk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNJbTJxAGtEg4ZMXY9g2LSoQ.Q3VvbiBBbHBpbnVz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#2 - Test Vector 2E-2-2 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('', fk, 'Cuon Alpinus', nonce);
+          assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNJbTJxAGtEg4ZMXY9g2LSoQ.Q3VvbiBBbHBpbnVz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#3 - Test Vector 2E-2-3 - callback api', (done) => {
@@ -385,11 +534,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('', sk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNreCcZAS0iGVlzdHjTf2ilg.Q3VvbiBBbHBpbnVz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#3 - Test Vector 2E-2-3 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('', sk, 'Cuon Alpinus', nonce);
+          assert.equal(token, 'v2.local.driRNhM20GQPvlWfJCepzh6HdijAq-yNreCcZAS0iGVlzdHjTf2ilg.Q3VvbiBBbHBpbnVz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
     });
 
@@ -412,11 +571,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('Love is stronger than hate or fear', nk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.BEsKs5AolRYDb_O-bO-lwHWUextpShFSvu6cB-KuR4wR9uDMjd45cPiOF0zxb7rrtOB5tRcS7dWsFwY4ONEuL5sWeunqHC9jxU0');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#1 - Test Vector 2E-3-1 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('Love is stronger than hate or fear', nk, '', nonce);
+          assert.equal(token, 'v2.local.BEsKs5AolRYDb_O-bO-lwHWUextpShFSvu6cB-KuR4wR9uDMjd45cPiOF0zxb7rrtOB5tRcS7dWsFwY4ONEuL5sWeunqHC9jxU0');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#2 - Test Vector 2E-3-2 - callback api', (done) => {
@@ -432,11 +601,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('Love is stronger than hate or fear', fk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.BEsKs5AolRYDb_O-bO-lwHWUextpShFSjvSia2-chHyMi4LtHA8yFr1V7iZmKBWqzg5geEyNAAaD6xSEfxoET1xXqahe1jqmmPw');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#2 - Test Vector 2E-3-2 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('Love is stronger than hate or fear', fk, '', nonce);
+          assert.equal(token, 'v2.local.BEsKs5AolRYDb_O-bO-lwHWUextpShFSjvSia2-chHyMi4LtHA8yFr1V7iZmKBWqzg5geEyNAAaD6xSEfxoET1xXqahe1jqmmPw');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#3 - Test Vector 2E-3-3 - callback api', (done) => {
@@ -452,11 +631,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('Love is stronger than hate or fear', sk, '', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.BEsKs5AolRYDb_O-bO-lwHWUextpShFSXlvv8MsrNZs3vTSnGQG4qRM9ezDl880jFwknSA6JARj2qKhDHnlSHx1GSCizfcF019U');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#3 - Test Vector 2E-3-3 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('Love is stronger than hate or fear', sk, '', nonce);
+          assert.equal(token, 'v2.local.BEsKs5AolRYDb_O-bO-lwHWUextpShFSXlvv8MsrNZs3vTSnGQG4qRM9ezDl880jFwknSA6JARj2qKhDHnlSHx1GSCizfcF019U');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
     });
 
@@ -479,11 +668,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('Love is stronger than hate or fear', nk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.FGVEQLywggpvH0AzKtLXz0QRmGYuC6yvbcqXgWxM3vJGrJ9kWqquP61Xl7bz4ZEqN5XwH7xyzV0QqPIo0k52q5sWxUQ4LMBFFso.Q3VvbiBBbHBpbnVz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#1 - Test Vector 2E-4-1 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('Love is stronger than hate or fear', nk, 'Cuon Alpinus', nonce);
+          assert.equal(token, 'v2.local.FGVEQLywggpvH0AzKtLXz0QRmGYuC6yvbcqXgWxM3vJGrJ9kWqquP61Xl7bz4ZEqN5XwH7xyzV0QqPIo0k52q5sWxUQ4LMBFFso.Q3VvbiBBbHBpbnVz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#2 - Test Vector 2E-4-2 - callback api', (done) => {
@@ -499,11 +698,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('Love is stronger than hate or fear', fk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.FGVEQLywggpvH0AzKtLXz0QRmGYuC6yvZMW3MgUMFplQXsxcNlg2RX8LzFxAqj4qa2FwgrUdH4vYAXtCFrlGiLnk-cHHOWSUSaw.Q3VvbiBBbHBpbnVz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#2 - Test Vector 2E-4-2 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('Love is stronger than hate or fear', fk, 'Cuon Alpinus', nonce);
+          assert.equal(token, 'v2.local.FGVEQLywggpvH0AzKtLXz0QRmGYuC6yvZMW3MgUMFplQXsxcNlg2RX8LzFxAqj4qa2FwgrUdH4vYAXtCFrlGiLnk-cHHOWSUSaw.Q3VvbiBBbHBpbnVz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
 
       it('#3 - Test Vector 2E-4-3 - callback api', (done) => {
@@ -519,11 +728,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt('Love is stronger than hate or fear', sk, 'Cuon Alpinus', nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.FGVEQLywggpvH0AzKtLXz0QRmGYuC6yvl05z9GIX0cnol6UK94cfV77AXnShlUcNgpDR12FrQiurS8jxBRmvoIKmeMWC5wY9Y6w.Q3VvbiBBbHBpbnVz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('#3 - Test Vector 2E-4-3 - async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt('Love is stronger than hate or fear', sk, 'Cuon Alpinus', nonce);
+          assert.equal(token, 'v2.local.FGVEQLywggpvH0AzKtLXz0QRmGYuC6yvl05z9GIX0cnol6UK94cfV77AXnShlUcNgpDR12FrQiurS8jxBRmvoIKmeMWC5wY9Y6w.Q3VvbiBBbHBpbnVz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
     });
 
@@ -550,11 +769,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.__encrypt(message, sk, footer, nonce)
           .then((token) => {
             assert.equal(token, 'v2.local.lClhzVOuseCWYep44qbA8rmXry66lUupyENijX37_I_z34EiOlfyuwqIIhOjF-e9m2J-Qs17Gs-BpjpLlh3zf-J37n7YGHqMBV6G5xD2aeIKpck6rhfwHpGF38L7ryYuzuUeqmPg8XozSfU4PuPp9o8.UGFyYWdvbiBJbml0aWF0aXZlIEVudGVycHJpc2Vz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('async/await api', (done) => {
+        (async () => {
+          const token = await V2.__encrypt(message, sk, footer, nonce);
+          assert.equal(token, 'v2.local.lClhzVOuseCWYep44qbA8rmXry66lUupyENijX37_I_z34EiOlfyuwqIIhOjF-e9m2J-Qs17Gs-BpjpLlh3zf-J37n7YGHqMBV6G5xD2aeIKpck6rhfwHpGF38L7ryYuzuUeqmPg8XozSfU4PuPp9o8.UGFyYWdvbiBJbml0aWF0aXZlIEVudGVycHJpc2Vz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
     });
   });
@@ -589,11 +818,21 @@ describe('Protocol V2 Test Vectors', () => {
       V2.sign('', sk, '')
         .then((token) => {
           assert.equal(token, 'v2.public.xnHHprS7sEyjP5vWpOvHjAP2f0HER7SWfPuehZ8QIctJRPTrlZLtRCk9_iNdugsrqJoGaO4k9cDBq3TOXu24AA');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('#1 - Test Vector 2S-1 - async/await api', (done) => {
+      (async () => {
+        const token = await V2.sign('', sk, '');
+        assert.equal(token, 'v2.public.xnHHprS7sEyjP5vWpOvHjAP2f0HER7SWfPuehZ8QIctJRPTrlZLtRCk9_iNdugsrqJoGaO4k9cDBq3TOXu24AA');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('#2 - Test Vector 2S-2 - callback api', (done) => {
@@ -609,11 +848,21 @@ describe('Protocol V2 Test Vectors', () => {
       V2.sign('', sk, 'Cuon Alpinus')
         .then((token) => {
           assert.equal(token, 'v2.public.Qf-w0RdU2SDGW_awMwbfC0Alf_nd3ibUdY3HigzU7tn_4MPMYIKAJk_J_yKYltxrGlxEdrWIqyfjW81njtRyDw.Q3VvbiBBbHBpbnVz');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('#2 - Test Vector 2S-2 - async/await api', (done) => {
+      (async () => {
+        const token = await V2.sign('', sk, 'Cuon Alpinus')
+        assert.equal(token, 'v2.public.Qf-w0RdU2SDGW_awMwbfC0Alf_nd3ibUdY3HigzU7tn_4MPMYIKAJk_J_yKYltxrGlxEdrWIqyfjW81njtRyDw.Q3VvbiBBbHBpbnVz');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('#3 - Test Vector 2S-3 - callback api', (done) => {
@@ -629,11 +878,21 @@ describe('Protocol V2 Test Vectors', () => {
       V2.sign('Frank Denis rocks', sk, '')
         .then((token) => {
           assert.equal(token, 'v2.public.RnJhbmsgRGVuaXMgcm9ja3NBeHgns4TLYAoyD1OPHww0qfxHdTdzkKcyaE4_fBF2WuY1JNRW_yI8qRhZmNTaO19zRhki6YWRaKKlCZNCNrQM');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('#3 - Test Vector 2S-3 - async/await api', (done) => {
+      (async () => {
+        const token = await V2.sign('Frank Denis rocks', sk, '');
+        assert.equal(token, 'v2.public.RnJhbmsgRGVuaXMgcm9ja3NBeHgns4TLYAoyD1OPHww0qfxHdTdzkKcyaE4_fBF2WuY1JNRW_yI8qRhZmNTaO19zRhki6YWRaKKlCZNCNrQM');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('#4 - Test Vector 2S-4 - callback api', (done) => {
@@ -649,11 +908,21 @@ describe('Protocol V2 Test Vectors', () => {
       V2.sign('Frank Denis rockz', sk, '')
         .then((token) => {
           assert.equal(token, 'v2.public.RnJhbmsgRGVuaXMgcm9ja3qIOKf8zCok6-B5cmV3NmGJCD6y3J8fmbFY9KHau6-e9qUICrGlWX8zLo-EqzBFIT36WovQvbQZq4j6DcVfKCML');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('#4 - Test Vector 2S-4 - async/await api', (done) => {
+      (async () => {
+        const token = await V2.sign('Frank Denis rockz', sk, '');
+        assert.equal(token, 'v2.public.RnJhbmsgRGVuaXMgcm9ja3qIOKf8zCok6-B5cmV3NmGJCD6y3J8fmbFY9KHau6-e9qUICrGlWX8zLo-EqzBFIT36WovQvbQZq4j6DcVfKCML');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     it('#5 - Test Vector 2S-5 - callback api', (done) => {
@@ -669,11 +938,21 @@ describe('Protocol V2 Test Vectors', () => {
       V2.sign('Frank Denis rocks', sk, 'Cuon Alpinus')
         .then((token) => {
           assert.equal(token, 'v2.public.RnJhbmsgRGVuaXMgcm9ja3O7MPuu90WKNyvBUUhAGFmi4PiPOr2bN2ytUSU-QWlj8eNefki2MubssfN1b8figynnY0WusRPwIQ-o0HSZOS0F.Q3VvbiBBbHBpbnVz');
-          done();
+          return done();
         })
         .catch((err) => {
           return done(err);
         });
+    });
+
+    it('#5 - Test Vector 2S-5 - async/await api', (done) => {
+      (async () => {
+        const token = await V2.sign('Frank Denis rocks', sk, 'Cuon Alpinus');
+        assert.equal(token, 'v2.public.RnJhbmsgRGVuaXMgcm9ja3O7MPuu90WKNyvBUUhAGFmi4PiPOr2bN2ytUSU-QWlj8eNefki2MubssfN1b8figynnY0WusRPwIQ-o0HSZOS0F.Q3VvbiBBbHBpbnVz');
+        return done();
+      })().catch((err) => {
+        return done(err);
+      });
     });
 
     describe('json test', () => {
@@ -698,11 +977,21 @@ describe('Protocol V2 Test Vectors', () => {
         V2.sign(message, sk, footer)
           .then((token) => {
             assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwaXJlcyI6IjIwMTktMDEtMDFUMDA6MDA6MDArMDA6MDAifcMYjoUaEYXAtzTDwlcOlxdcZWIZp8qZga3jFS8JwdEjEvurZhs6AmTU3bRW5pB9fOQwm43rzmibZXcAkQ4AzQs.UGFyYWdvbiBJbml0aWF0aXZlIEVudGVycHJpc2Vz');
-            done();
+            return done();
           })
           .catch((err) => {
             return done(err);
           });
+      });
+
+      it('async/await api', (done) => {
+        (async () => {
+          const token = await V2.sign(message, sk, footer);
+          assert.equal(token, 'v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIiwiZXhwaXJlcyI6IjIwMTktMDEtMDFUMDA6MDA6MDArMDA6MDAifcMYjoUaEYXAtzTDwlcOlxdcZWIZp8qZga3jFS8JwdEjEvurZhs6AmTU3bRW5pB9fOQwm43rzmibZXcAkQ4AzQs.UGFyYWdvbiBJbml0aWF0aXZlIEVudGVycHJpc2Vz');
+          return done();
+        })().catch((err) => {
+          return done(err);
+        });
       });
     });
   });

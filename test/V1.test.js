@@ -407,10 +407,9 @@ describe('Protocol V1', () => {
           if (err) { return done(err); }
           assert.ok(token);
 
-          V2.decrypt(token, key, '', function(err, token) {
+          V2.decrypt(token, key, '', function(err, data) {
             assert.ok(err);
-            assert.ok(!token);
-
+            assert.ok(!data);
             assert.ok(err instanceof InvalidVersionError);
             assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
 
@@ -427,7 +426,7 @@ describe('Protocol V1', () => {
 
             // nest so that we catch the right error
             return V2.decrypt(token, key, '')
-              .then((token) => {
+              .then((data) => {
                 assert.ok(false); // fail if we go through here
               })
               .catch((err) => {
@@ -795,9 +794,9 @@ describe('Protocol V1', () => {
           if (err) { return done(err); }
           assert.ok(token);
 
-          V2.verify(token, pk, '', function(err, token) {
+          V2.verify(token, pk, '', function(err, verified) {
             assert.ok(err);
-            assert.ok(!token);
+            assert.ok(!verified);
 
             assert.ok(err instanceof InvalidVersionError);
             assert.equal(err.message, 'The given key is not intended for this version of PASETO.');
@@ -815,7 +814,7 @@ describe('Protocol V1', () => {
 
             // nest so that we catch the right error
             return V2.verify(token, pk, '')
-              .then((token) => {
+              .then((verified) => {
                 assert.ok(false); // fail if we go through here
               })
               .catch((err) => {
@@ -838,7 +837,7 @@ describe('Protocol V1', () => {
           const token = await V1.sign('test', sk, '');
             assert.ok(token);
 
-          const data  = await V2.verify(token, pk, '')
+          const verified = await V2.verify(token, pk, '')
           assert.ok(false); // fail if we go through here
         })().catch((err) => {
           assert.ok(err);
