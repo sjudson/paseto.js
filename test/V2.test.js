@@ -38,6 +38,7 @@ describe('Protocol V2', () => {
 
     before((done) => {
       footer = 'footer';
+      encoded_footer = 'Zm9vdGVy';
 
       const rkey = Buffer.from(sodium.randombytes_buf(32));
 
@@ -99,6 +100,7 @@ describe('Protocol V2', () => {
 
           assert.equal(typeof token, 'string');
           assert.equal(token.substring(0, 9), 'v2.local.');
+          assert.equal(token.substring(token.length - 8, token.length), encoded_footer);
 
           V2.decrypt(token, key, footer, (err, data) => {
             if (err) { return done(err); }
@@ -118,6 +120,7 @@ describe('Protocol V2', () => {
 
             assert.equal(typeof token, 'string');
             assert.equal(token.substring(0, 9), 'v2.local.');
+            assert.equal(token.substring(token.length - 8, token.length), encoded_footer);
 
             return V2.decrypt(token, key, footer);
           })
@@ -189,6 +192,7 @@ describe('Protocol V2', () => {
 
           assert.equal(typeof token, 'string');
           assert.equal(token.substring(0, 9), 'v2.local.');
+          assert.equal(token.substring(token.length - 8, token.length), encoded_footer);
 
           V2.decrypt(token, key, footer, (err, data) => {
             if (err) { return done(err); }
@@ -208,6 +212,7 @@ describe('Protocol V2', () => {
 
             assert.equal(typeof token, 'string');
             assert.equal(token.substring(0, 9), 'v2.local.');
+            assert.equal(token.substring(token.length - 8, token.length), encoded_footer);
 
             return V2.decrypt(token, key, footer);
           })
