@@ -1,7 +1,7 @@
 const assert = require('assert');
 const sodium = require('libsodium-wrappers-sumo');
 
-const Paseto = require('../lib/paseto');
+const Paseto = require('../lib/paseto.node');
 
 describe('Protocol V2', () => {
 

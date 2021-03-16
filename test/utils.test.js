@@ -4,7 +4,7 @@ describe('utilities', () => {
 
   describe('hkdf', () => {
 
-    const hkdf = require('../lib/utils').hkdf('sha256');
+    const hkdf = require('../lib/utils/node').hkdf('sha256');
 
     it('should pass Test Vector #1', (done) => {
 
@@ -61,7 +61,7 @@ describe('utilities', () => {
 
   describe('pae', () => {
 
-    const pae = require('../lib/utils').pae;
+    const pae = require('../lib/utils/common').pae;
 
     it('should encode no inputs', () => {
       const encoded  = pae();

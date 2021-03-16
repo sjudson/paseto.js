@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const Paseto = require('../lib/paseto');
+const Paseto = require('../lib/paseto.node');
 
 describe('Protocol V2 Test Vectors', () => {
 
