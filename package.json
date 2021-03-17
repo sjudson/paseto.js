@@ -8,7 +8,9 @@
   "author": "Samuel Judson",
   "license": "MIT",
   "dependencies": {
-    "libsodium-wrappers-sumo": "0.7.9"
+    "@stablelib/base64": "^1.0.0",
+    "libsodium-wrappers-sumo": "0.7.9",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^14.14.34",
@@ -17,6 +19,7 @@
     "webpack-cli": "^4.5.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha ./test"
+    "test": "./node_modules/.bin/mocha ./test",
+    "build": "./node_modules/webpack/bin/webpack.js"
   }
 }
